@@ -2,14 +2,10 @@ import express, { json } from 'express'
 import logger from './middlewares/error/logger';
 import responder from './middlewares/error/responder';
 import notFound from './middlewares/not-found';
-import authRouter from './routers/auth'
-import profileRouter from './routers/profile'
-import feedRouter from './routers/feed'
-import followsRouter from './routers/follows'
-import commentsRouter from './routers/comments'
+import vacationRouter from './routers/vacation'
+// router here
 import config from 'config'
 import sequelize from './db/sequelize';
-import enforceAuth from './middlewares/enforce-auth';
 import cors from 'cors'
 import { createAppBucketIfNotExists, testUpload } from './aws/aws';
 import fileUpload from 'express-fileupload';
@@ -30,12 +26,7 @@ app.use(json())
 app.use(fileUpload())
 
 // load routers
-app.use('/auth', authRouter)
-app.use(enforceAuth)
-app.use('/profile', profileRouter)
-app.use('/feed', feedRouter)
-app.use('/follows', followsRouter)
-app.use('/comments', commentsRouter)
+app.use('/vacations', vacationRouter)
 
 // not found
 app.use(notFound)

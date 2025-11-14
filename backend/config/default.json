@@ -1,7 +1,7 @@
 {
     "app": {
         "port": 3000,
-        "name": "weezer dev",
+        "name": "funfly dev",
         "secret": "MySecret",
         "jwtSecret": "jwtSecret"
     },
@@ -10,10 +10,10 @@
         "port": "3306",
         "username": "root",
         "password": "",
-        "database": "weezer"
+        "database": "funfly"
     },
     "s3": {
-        "bucket": "images.weezer.com",
+        "bucket": "images.funfly.com",
         "connection": {
             "endpoint": "http://localhost:4566",
             "region": "us-east-1",

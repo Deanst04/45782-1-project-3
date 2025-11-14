@@ -30,10 +30,10 @@ export default class User extends Model {
     password: string
 
     @AllowNull(false)
-    @Column(DataType.STRING(10))
     @Default("user")
+    @Column(DataType.STRING(10))
     role!: "user" | "admin"
 
-    @BelongsToMany(() => Vacation, () => Follow)
+    @BelongsToMany(() => Vacation, () => Follow, 'userId', 'vacationId')
     followedVacations: Vacation[]
 }

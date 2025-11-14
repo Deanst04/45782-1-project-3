@@ -36,6 +36,6 @@ export default class Vacation extends Model {
     @Column(DataType.STRING)
     imageUrl: string
 
-    @BelongsToMany(() => User, () => Follow)
+    @BelongsToMany(() => User, () => Follow, 'vacationId', 'userId')
     followers: User[]
 }
