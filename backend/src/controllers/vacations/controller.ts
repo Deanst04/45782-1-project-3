@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import User from "../../models/User";
 import Vacation from "../../models/Vacation";
 
 export async function getVacations(req: Request, res: Response, next: NextFunction) {
@@ -59,6 +60,31 @@ export async function deleteVacation(req: Request<{ vacationId: string }>, res: 
             message: 'No vacation found to delete.'
         })
         res.json({ success: true })
+    } catch(e) {
+        next(e)
+    }
+
+}
+
+export async function getVacationsFollowersCount(req: Request, res: Response, next: NextFunction) {
+
+    try {
+        
+        const vacations = await Vacation.findAll({
+            include: {
+                model: User,
+                as: 'followers'
+            }
+        })
+
+        const results = vacations.map(v => ({
+            id: v.id,
+            destination: v.destination,
+            followersCount: v.followers?.length || 0
+        }))
+
+        res.json(results)
+
     } catch(e) {
         next(e)
     }
