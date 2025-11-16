@@ -1,5 +1,9 @@
 export default interface User {
     id: string,
-    name: string,
-    username: string
+    firstName: string,
+    lastName: string,
+    email: string,
+    role: "user" | "admin",
+    createdAt: string,
+    updatedAt: string
 }

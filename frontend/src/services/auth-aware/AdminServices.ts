@@ -1,0 +1,28 @@
+import type Vacation from "../../models/vacation";
+import type VacationDraft from "../../models/Vacation-draft";
+import type VacationFollowersCount from "../../models/vacation-followed-count";
+import AuthAware from "./AuthAware";
+
+export default class AdminServices extends AuthAware {
+
+    async getVacationFollowersCount(): Promise<VacationFollowersCount[]> {
+        const response = await this.axiosInstance.get<VacationFollowersCount[]>('/vacations/followers-count')
+        return response.data
+    }
+
+    async createVacation(vacation: VacationDraft): Promise<Vacation> {
+        const response = await this.axiosInstance.post<Vacation>('/vacations', vacation)
+        return response.data
+    }
+
+    async deleteVacation(vacationId: string): Promise<boolean> {
+        const response = await this.axiosInstance.delete<boolean>(`/vacations/${vacationId}`)
+        return response.data
+    }
+
+    async editVacation(vacationId: string, vacation: VacationDraft): Promise<Vacation> {
+        const response = await this.axiosInstance.patch<Vacation>(`/vacations/${vacationId}`, vacation)
+        return response.data
+    }
+
+}
