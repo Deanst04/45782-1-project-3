@@ -1,5 +1,5 @@
 import type Vacation from "../../models/vacation";
-import type VacationDraft from "../../models/Vacation-draft";
+import type VacationDraft from "../../models/vacation-draft";
 import type VacationFollowersCount from "../../models/vacation-followed-count";
 import AuthAware from "./AuthAware";
 

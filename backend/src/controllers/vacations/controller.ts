@@ -5,8 +5,30 @@ import Vacation from "../../models/Vacation";
 export async function getVacations(req: Request, res: Response, next: NextFunction) {
 
     try {
-        const vacations = await Vacation.findAll()
-        res.json(vacations)
+        const vacations = await Vacation.findAll({
+            include: {
+                model: User,
+                as: 'followers',
+                attributes: ["id"],
+                through: { attributes: [] }
+            },
+            order: [["startDate", "ASC"]]
+        })
+
+        const final = vacations.map(v => {
+
+            const plain = v.get({ plain: true })
+            plain.followerCount = plain.followers.length
+            plain.isFollowed = plain.followers.some(f => f.id === req.userId)
+
+            delete plain.followers
+
+            return plain
+
+        })
+
+        res.json(final)
+
     } catch(e) {
         next(e)
     }

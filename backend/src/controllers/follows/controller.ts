@@ -3,23 +3,6 @@ import User from "../../models/User";
 import Vacation from "../../models/Vacation";
 import Follow from "../../models/Follow";
 
-export async function getFollowedVacations(req: Request, res: Response, next: NextFunction) {
-
-    try {
-        const user = await User.findByPk(req.userId, {
-            include: [{
-                model: Vacation,
-                as: 'followedVacations'
-            }]
-        })
-
-        res.json(user.followedVacations)
-
-    } catch(e) {
-        next(e)
-    }
-
-}
 
 export async function followVacation(req: Request<{ id: string }>, res: Response, next: NextFunction) {
 

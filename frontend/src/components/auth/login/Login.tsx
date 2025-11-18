@@ -4,6 +4,7 @@ import authService from '../../../services/auth';
 import './Login.css'
 import { useForm } from 'react-hook-form';
 import AuthContext from '../auth/AuthContext';
+import { NavLink } from 'react-router-dom';
 
 export default function Login() {
 
@@ -16,7 +17,7 @@ export default function Login() {
         try {
             const { jwt } = await authService.login(login)
             authContext?.newJwt(jwt)
-            alert(jwt)
+            alert('logged in successfully')
         } catch(e) {
             alert(e)
         }
@@ -25,12 +26,14 @@ export default function Login() {
 
     return (
         <div className='Login'>
-            login page
             <form onSubmit={handleSubmit(submit)}>
                 <input type="email" placeholder='email' required {...register('email')} />email
                 <input type="password" placeholder='password' required {...register('password')} />password
                 <button>login</button>
             </form>
+            <p className='go-signup'>
+                Don't have an account? <NavLink to="/signup">signup now</NavLink>
+            </p>
         </div>
     )
 
