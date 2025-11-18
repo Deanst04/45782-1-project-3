@@ -1,17 +1,14 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Profile from "../../posts/profile/Profile";
-import Feed from "../../posts/feed/Feed";
 import NotFound from "../not-found/NotFound";
-import EditPost from "../../posts/edit/EditPost";
+import Signup from "../../auth/signup/Signup";
 
 export default function Main() {
     return (
         <Routes>
-            {/* <Route path="/" element={<Profile />} /> */}
-            <Route path="/" element={<Navigate to="/profile" />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/edit/:id" element={<EditPost />} />
-            <Route path="/feed" element={<Feed />} />
+            <Route path="/" element={<Navigate to="/Profile" />} />
+            <Route path="/signup" element={<Signup />} />
+            {/* <Route path="/profile/edit/:id" element={<EditPost />} />
+            <Route path="/feed" element={<Feed />} /> */}
             <Route path="*" element={<NotFound />} />
         </Routes>
     )
