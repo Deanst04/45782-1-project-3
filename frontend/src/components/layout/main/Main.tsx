@@ -27,7 +27,7 @@ export default function Main() {
                 <Route path="/admin" element={<AdminPage />} />
 
                 {/* redirect to signup page */}
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/signup" element={<Signup />} />;
 
                 {/* 404 */}
                 <Route path="*" element={<NotFound />} />     
