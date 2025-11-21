@@ -46,7 +46,7 @@ export default function AdminPage() {
     return (
         <div className='AdminPage'>
             <h1>Admin Panel</h1>
-
+            <button className='add-vac' onClick={() => navigate('/admin/add-vacation')}>add vacation</button>
             <div className='vacation-grid'>
                 {vacations.map(v => (
                     <VacationCard

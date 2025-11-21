@@ -14,3 +14,60 @@
     max-width: 1400px;
     padding: 0 20px;
 }
+
+.AdminPage {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+    background-color: #f5f7fb;
+}
+
+.vacation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 35px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 20px;
+}
+
+.AdminPage {
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.AdminPage h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.add-vac {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    width: fit-content;
+}
+
+.add-vac:hover {
+    background: #2563eb;
+}
+
+.vacation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 10px;
+}

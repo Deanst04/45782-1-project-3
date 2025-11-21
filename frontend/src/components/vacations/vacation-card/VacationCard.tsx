@@ -78,7 +78,12 @@ export default function VacationCard(props: VacationProps) {
                         />
                     )}
 
-                    {role === "admin"}
+                    {role === "admin" && (
+                        <div className='admin-actions'>
+                            <button onClick={editMe}>edit vacation</button>
+                            <button onClick={removeMe}>delete vacation</button>
+                        </div>
+                    )}
 
                 </div>
             </div>

@@ -4,6 +4,7 @@ import AuthContext from '../auth/AuthContext';
 import { useContext } from 'react';
 import authService from '../../../services/auth';
 import type SignupModel from '../../../models/signup';
+import { NavLink } from 'react-router-dom';
 
 export default function Signup() {
 
@@ -26,12 +27,27 @@ export default function Signup() {
     return (
         <div className='Signup'>
             <form onSubmit={handleSubmit(submit)}>
-                <input placeholder='first name' required {...register('firstName')} />
-                <input placeholder='last name' required {...register('lastName')} />
-                <input type="email" placeholder='email' required {...register('email')} />
+                <div className='field'>
+                <label>First Name</label>
+                <input placeholder='John' required {...register('firstName')} />
+                </div>
+                <div className='field'>
+                <label>Last Name</label>
+                <input placeholder='Doe' required {...register('lastName')} />
+                </div>
+                <div className='field'>
+                <label>Email</label>
+                <input type="email" placeholder='example@mail.com' required {...register('email')} />
+                </div>
+                <div className='field'>
+                <label>Password</label>
                 <input type="password" placeholder='password' required {...register('password')} />
+                </div>
                 <button>signup</button>
             </form>
+            <p className='go-login'>
+                Already have an account? <NavLink to="/login">login now</NavLink>
+            </p>
         </div>
     )
 
