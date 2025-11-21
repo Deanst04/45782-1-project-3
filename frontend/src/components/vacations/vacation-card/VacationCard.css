@@ -1,0 +1,62 @@
+.VacationCard {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 3px 20px rgba(0,0,0,0.12);
+    padding-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease;
+}
+
+.VacationCard:hover {
+    transform: translateY(-4px);
+}
+
+.vac-image img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.vac-header {
+    padding: 15px 18px 5px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.vac-dates {
+    padding: 0 18px;
+    margin-bottom: 10px;
+    color: #444;
+    font-size: 14px;
+}
+
+.vac-desc {
+    padding: 0 18px;
+    color: #333;
+    line-height: 1.45;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+
+.vac-footer {
+    padding: 0 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vac-price {
+    background-color: #0d6efd;
+    padding: 10px 18px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.vac-actions {
+    display: flex;
+    align-items: center;
+}

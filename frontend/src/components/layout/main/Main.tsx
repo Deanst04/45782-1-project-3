@@ -14,7 +14,7 @@ export default function Main() {
 
             {/* redirection to admin or user page based on their role */}
 
-                <Route path="/" element={
+                <Route path="" element={
                     role === "admin" ? 
                     <Navigate to="/admin" /> :
                     <Navigate to="/user" />
@@ -27,7 +27,7 @@ export default function Main() {
                 <Route path="/admin" element={<AdminPage />} />
 
                 {/* redirect to signup page */}
-                <Route path="/signup" element={<Signup />} />;
+                <Route path="/signup" element={<Signup />} />
 
                 {/* 404 */}
                 <Route path="*" element={<NotFound />} />     
