@@ -1,0 +1,128 @@
+.Edit {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.Edit form {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  box-shadow: 0 3px 18px rgba(0,0,0,0.12);
+  padding: 28px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.Edit .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.Edit h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.Edit input,
+.Edit textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.Edit input:focus,
+.Edit textarea:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+}
+
+.Edit textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.Edit .file-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* IMAGE UPLOAD CONTAINER */
+.image-upload {
+  width: 100%;
+  height: 180px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* STATE: no preview */
+.upload-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  color: #64748b;
+  cursor: pointer;
+}
+
+/* STATE: preview image exists */
+.upload-preview {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.upload-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* BUTTONS */
+.add-btn {
+  background: #3b82f6;
+  color: white;
+  padding: 14px 22px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.add-btn:hover {
+  background: #2563eb;
+}
+
+.cancel-btn {
+  background: #e5e7eb;
+  color: #111;
+  padding: 14px 22px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.cancel-btn:hover {
+  background: #d1d5db;
+}

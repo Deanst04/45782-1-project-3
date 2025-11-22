@@ -1,9 +1,51 @@
 .Header {
+    width: 100%;
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+
+    background: #ffffff;
+    padding: 12px 22px;
+    border-bottom: 1px solid #e5e7eb;
+
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111827;
 }
 
+/* Left side (logo) */
+.Header .logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #1e3a8a; /* deep blue */
+}
+
+/* Right side (welcome + logout) */
+.Header .user-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Logout button */
+.Header .logout-btn {
+    padding: 6px 12px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.Header .logout-btn:hover {
+    background: #dc2626;
+}
+
+/* Active link */
 .Header .active {
-    color: green;
+    color: #2563eb;
+    font-weight: 600;
 }

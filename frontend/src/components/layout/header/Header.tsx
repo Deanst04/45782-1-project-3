@@ -19,9 +19,11 @@ export default function Header() {
 
     return (
         <div className='Header'>
-            <div>logo</div>
-            <div>
-                welcome {name} | <button onClick={logout}>logout</button>
+            <div className="logo">logo</div>
+
+            <div className="user-area">
+                welcome {name}
+                <button className="logout-btn" onClick={logout}>logout</button>
             </div>
         </div>
     )

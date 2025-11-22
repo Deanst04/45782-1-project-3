@@ -26,7 +26,7 @@ export default function New() {
 
     async function submit(draft: VacationDraft) {
 
-        draft.imageUrl = (draft.imageUrl as unknown as FileList)[0]
+        draft.image = (draft.image as unknown as FileList)[0]
         console.log(draft)
 
         try {
@@ -81,7 +81,7 @@ export default function New() {
                             <input 
                                 type='file'
                                 accept='image/*'
-                                {...register('imageUrl', {required: "Image is required"})}
+                                {...register('image', {required: "Image is required"})}
                                 onChange={handleImageChange}
                                 hidden
                             />
@@ -93,14 +93,14 @@ export default function New() {
                             <input 
                                 type='file'
                                 accept='image/*'
-                                {...register('imageUrl', {required: "Image is required"})}
+                                {...register('image', {required: "Image is required"})}
                                 onChange={handleImageChange}
                                 hidden
                             />
                         </label>
                     )}
                 </div>
-                <div className="formError">{formState.errors.imageUrl?.message}</div>
+                <div className="formError">{formState.errors.image?.message}</div>
                 <button className='add-btn'>add vacation</button>
                 <button className='cancel-btn' onClick={() => navigate('/admin')}>cancel</button>
             </form>

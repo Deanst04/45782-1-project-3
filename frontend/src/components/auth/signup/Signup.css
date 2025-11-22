@@ -36,18 +36,20 @@
 
 .Signup button {
     margin-top: 8px;
-    background: #3b82f6;
-    color: #fff;
     padding: 12px;
-    border-radius: 8px;
+    background: #3b82f6;
+    color: white;
     border: none;
+    border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    transition: .2s ease;
+    font-weight: 500;
+    transition: background .2s ease, transform .15s ease;
 }
 
 .Signup button:hover {
     background: #2563eb;
+    transform: translateY(-1px);
 }
 
 .Signup .field {

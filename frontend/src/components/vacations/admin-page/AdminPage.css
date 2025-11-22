@@ -42,10 +42,19 @@
     gap: 20px;
 }
 
+
 .AdminPage h1 {
     text-align: center;
     font-size: 2rem;
     font-weight: 600;
+}
+
+.admin-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
 .add-vac {
@@ -61,8 +70,48 @@
     width: fit-content;
 }
 
+.add-vac::before {
+    content: "➕ ";
+    font-size: 1.1rem;
+}
+
+
 .add-vac:hover {
     background: #2563eb;
+}
+
+.graph-btn,
+.csv-btn {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    color: #fff;
+}
+
+.graph-btn {
+    background: #0ea5e9;
+}
+.graph-btn::before {
+    content: "📊 ";
+    font-size: 1.1rem;
+}
+.graph-btn:hover {
+    background: #0284c7;
+}
+
+.csv-btn {
+    background: #f59e0b;
+}
+.csv-btn::before {
+    content: "📄 ";
+    font-size: 1.1rem;
+}
+.csv-btn:hover {
+    background: #d97706;
 }
 
 .vacation-grid {
