@@ -3,6 +3,9 @@ import type VacationModel from '../../../models/vacation'
 // import { useNavigate } from 'react-router-dom'
 import useRole from '../../../hooks/use-role'
 import LikeButton from '../../common/like-button/LikeButton'
+import useService from '../../../hooks/use-service'
+import FollowsServices from '../../../services/auth-aware/FollowsServices'
+import { useState } from 'react'
 
 interface VacationProps {
     vacation: VacationModel,
@@ -25,14 +28,25 @@ export default function VacationCard(props: VacationProps) {
      } = props.vacation
 
     const role = useRole()
+
+    const followService = useService(FollowsServices)
+
+    const [followed, setFollowed] = useState<boolean>(isFollowed)
+    const [count, setCount] = useState<number>(followerCount)
     
     async function handleToggleFollow() {
 
         try {
-            if(isFollowed) {
+            if(followed) {
                 console.log(`you just unlike:`, id)
+                await followService.unfollow(id)
+                setFollowed(false)
+                setCount(count - 1)
             } else {
                 console.log(`you just liked:`, id)
+                await followService.follow(id)
+                setFollowed(true)
+                setCount(count + 1)
             }
             console.log('toggled successfully')
         } catch(e) {
@@ -72,8 +86,8 @@ export default function VacationCard(props: VacationProps) {
 
                     {role === "user" && (
                         <LikeButton
-                            followerCount={followerCount}
-                            isFollowed={isFollowed}
+                            followerCount={count}
+                            isFollowed={followed}
                             onToggle={handleToggleFollow}
                         />
                     )}

@@ -7,6 +7,7 @@ import VacationServices from '../../../services/auth-aware/VacationServices'
 import AdminServices from '../../../services/auth-aware/AdminServices'
 import VacationCard from '../vacation-card/VacationCard'
 import { useNavigate } from 'react-router-dom'
+import Spinner from '../../common/spinner/Spinner'
 
 export default function AdminPage() {
 
@@ -18,6 +19,7 @@ export default function AdminPage() {
     const navigate = useNavigate()
 
     const [vacations, setVacations] = useState<Vacation[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
         (async () => {
@@ -26,6 +28,8 @@ export default function AdminPage() {
                 setVacations(vacations)
             } catch(e) {
                 alert(e)
+            } finally {
+                setIsLoading(false)
             }
         })()
     }, [])
@@ -45,6 +49,9 @@ export default function AdminPage() {
 
     return (
         <div className='AdminPage'>
+            {isLoading && <Spinner />}
+
+            {!isLoading && <>
             <h1>Admin Panel</h1>
             <div className='admin-actions'>
             <button className='add-vac' onClick={() => navigate('/admin/add-vacation')}>add vacation</button>
@@ -61,6 +68,7 @@ export default function AdminPage() {
                     />
                 ))}
             </div>
+            </>}
         </div>
     )
 

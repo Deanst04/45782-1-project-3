@@ -4,12 +4,17 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContaine
 import type VacationFollowersCount from '../../../../models/vacation-followed-count';
 import useService from '../../../../hooks/use-service';
 import AdminServices from '../../../../services/auth-aware/AdminServices';
+import { useNavigate } from 'react-router-dom';
+import Spinner from '../../../common/spinner/Spinner';
 
 export default function Graph() {
 
     const adminServices = useService(AdminServices)
 
     const [vacationStats, setVacationStats] = useState<VacationFollowersCount[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         (async () => {
@@ -18,6 +23,8 @@ export default function Graph() {
                 setVacationStats(vacationStats)
             } catch(e) {
                 alert(e)
+            } finally {
+                setIsLoading(false)
             }
         })()
     }, [])
@@ -36,7 +43,13 @@ export default function Graph() {
 
     return (
         <div className='Graph'>
+            {isLoading && <Spinner />}
+
+            {!isLoading && <>
             <h1>Vacation Followers Statistics</h1>
+            <button className='back-btn' onClick={() => navigate('/admin')}>
+                Back to admin page
+            </button>
             <ResponsiveContainer width='100%' height={400}>
                 <BarChart data={graphData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray='3 3' />
@@ -66,6 +79,7 @@ export default function Graph() {
                     />
                 </BarChart>
             </ResponsiveContainer>
+            </>}
         </div>
     )
 

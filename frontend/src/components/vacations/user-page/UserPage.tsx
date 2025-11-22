@@ -5,6 +5,7 @@ import type Vacation from '../../../models/vacation'
 import useService from '../../../hooks/use-service'
 import VacationServices from '../../../services/auth-aware/VacationServices'
 import VacationCard from '../vacation-card/VacationCard'
+import Spinner from '../../common/spinner/Spinner'
 
 export default function UserPage() {
 
@@ -13,6 +14,7 @@ export default function UserPage() {
     const vacationServices = useService(VacationServices)
 
     const [vacations, setVacations] = useState<Vacation[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
         (async () => {
@@ -22,6 +24,8 @@ export default function UserPage() {
                 setVacations(vacations)
             } catch(e) {
                 alert(e)
+            } finally {
+                setIsLoading(false)
             }
 
         })()
@@ -29,9 +33,9 @@ export default function UserPage() {
 
     return (
         <div className='UserPage'>
-            {vacations.length === 0 && <div>loading vacations...</div> }
+            {isLoading && <Spinner /> }
 
-            {vacations.length > 0 && (
+            {!isLoading && (
                 <div className='vacation-grid'>
                     {vacations.map(v => (
                         <VacationCard
