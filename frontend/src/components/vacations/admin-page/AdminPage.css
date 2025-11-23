@@ -120,3 +120,26 @@
     gap: 25px;
     padding: 10px;
 }
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+/* transition container */
+.vacation-grid {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* fade out */
+.vacation-grid.fade-out {
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+/* fade in */
+.vacation-grid.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}

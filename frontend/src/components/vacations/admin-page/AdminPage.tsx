@@ -8,7 +8,7 @@ import AdminServices from '../../../services/auth-aware/AdminServices'
 import VacationCard from '../vacation-card/VacationCard'
 import { useNavigate } from 'react-router-dom'
 import Spinner from '../../common/spinner/Spinner'
-// import Pagination from '@mui/material/Pagination';
+import Pagination from '@mui/material/Pagination';
 
 export default function AdminPage() {
 
@@ -21,11 +21,13 @@ export default function AdminPage() {
 
     const [vacations, setVacations] = useState<Vacation[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    // const [page, setPage] = useState<number>(1)
-    // const vacPerPage = 10
+    const [page, setPage] = useState<number>(1)
+    const [animState, setAnimState] = useState<"fade-in" | "fade-out">("fade-in");
+    const vacPerPage = 10
 
-    // const startIndex = (page - 1) * vacPerPage
-    // const endIndex = startIndex + vacPerPage
+    const startIndex = (page - 1) * vacPerPage
+    const endIndex = startIndex + vacPerPage
+    const vacationToShow = vacations.slice(startIndex, endIndex)
 
     useEffect(() => {
         (async () => {
@@ -39,6 +41,16 @@ export default function AdminPage() {
             }
         })()
     }, [])
+
+    useEffect(() => {
+        if(vacations.length > 0) {
+            const totalPages = Math.ceil(vacations.length / vacPerPage)
+
+            if(page > totalPages) {
+                setPage(totalPages)
+            }
+        }
+    }, [vacations])
 
     async function removeVacation(id: string) {
         try {
@@ -64,8 +76,8 @@ export default function AdminPage() {
             <button className='graph-btn' onClick={() => navigate('/admin/graph')}>view graph</button>
             <button className='csv-btn'>export csv</button>
             </div>
-            <div className='vacation-grid'>
-                {vacations.map(v => (
+            <div className={`vacation-grid ${animState}`}>
+                {vacationToShow.map(v => (
                     <VacationCard
                         key={v.id}
                         vacation={v}
@@ -73,6 +85,25 @@ export default function AdminPage() {
                         onEdit={editVacation}
                     />
                 ))}
+            </div>
+
+            <div className='pagination-wrapper'>
+                <Pagination 
+                    count={Math.ceil(vacations.length / vacPerPage)}
+                    page={page}
+                    onChange={(_, value) => {
+                        setAnimState("fade-out")
+
+                        setTimeout(() => {
+                            setPage(value);
+                            setAnimState("fade-in");
+                        }, 200);  // 200ms fade-out then update
+                    }}
+                    color="primary"
+                    size="large"
+                    variant="outlined"
+                    shape="rounded"
+                />
             </div>
             </>}
         </div>
