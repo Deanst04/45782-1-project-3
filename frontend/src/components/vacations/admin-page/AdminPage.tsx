@@ -8,6 +8,7 @@ import AdminServices from '../../../services/auth-aware/AdminServices'
 import VacationCard from '../vacation-card/VacationCard'
 import { useNavigate } from 'react-router-dom'
 import Spinner from '../../common/spinner/Spinner'
+// import Pagination from '@mui/material/Pagination';
 
 export default function AdminPage() {
 
@@ -20,6 +21,11 @@ export default function AdminPage() {
 
     const [vacations, setVacations] = useState<Vacation[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
+    // const [page, setPage] = useState<number>(1)
+    // const vacPerPage = 10
+
+    // const startIndex = (page - 1) * vacPerPage
+    // const endIndex = startIndex + vacPerPage
 
     useEffect(() => {
         (async () => {
