@@ -68,6 +68,15 @@ export default function VacationCard(props: VacationProps) {
 
             <div className='vac-image'>
                 <img src={imageUrl} alt={destination} />
+                {role === "user" && (
+                    <div className='like-button-container'>
+                        <LikeButton
+                            followerCount={count}
+                            isFollowed={followed}
+                            onToggle={handleToggleFollow}
+                        />
+                    </div>
+                )}
             </div>
             <div className='vac-header'>
                 <h3>{destination}</h3>
@@ -83,14 +92,6 @@ export default function VacationCard(props: VacationProps) {
                     {price}$
                 </div>
                 <div className='vac-actions'>
-
-                    {role === "user" && (
-                        <LikeButton
-                            followerCount={count}
-                            isFollowed={followed}
-                            onToggle={handleToggleFollow}
-                        />
-                    )}
 
                     {role === "admin" && (
                         <div className='admin-actions'>

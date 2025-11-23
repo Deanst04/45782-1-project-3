@@ -11,22 +11,23 @@ body,
     display: grid;
     grid-template-rows: auto 1fr; /* header - rest of page */
     height: 100%;
-    background-color: #f5f7fa; /* רקע מודרני ונקי */
+    background-color: #f5f7fa;
 }
 
-/* Header always on top */
+/* Header always on top - takes full width */
 .Layout header {
     grid-row: 1;
-    background: white;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 10px 20px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 /* Main takes the rest */
 .Layout main {
     grid-row: 2;
     overflow-y: auto;
-    padding: 20px;
+    padding: 0;
+    width: 100%;
 }
 
 /* Remove debugging dashed borders */

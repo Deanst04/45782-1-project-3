@@ -26,6 +26,7 @@ export default function Signup() {
 
     return (
         <div className='Signup'>
+            <div className='signup-panel'>
             <form onSubmit={handleSubmit(submit)}>
                 <div className='field'>
                 <label>First Name</label>
@@ -48,6 +49,7 @@ export default function Signup() {
             <p className='go-login'>
                 Already have an account? <NavLink to="/login">login now</NavLink>
             </p>
+            </div>
         </div>
     )
 

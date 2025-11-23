@@ -19,7 +19,7 @@ export default function Header() {
 
     return (
         <div className='Header'>
-            <div className="logo">logo</div>
+            <div className="logo">FunFly</div>
 
             <div className="user-area">
                 welcome {name}

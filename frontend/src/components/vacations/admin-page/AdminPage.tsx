@@ -71,7 +71,7 @@ export default function AdminPage() {
 
             {!isLoading && <>
             <h1>Admin Panel</h1>
-            <div className='admin-actions'>
+            <div className='admin-panel-actions'>
             <button className='add-vac' onClick={() => navigate('/admin/add-vacation')}>add vacation</button>
             <button className='graph-btn' onClick={() => navigate('/admin/graph')}>view graph</button>
             <button className='csv-btn'>export csv</button>

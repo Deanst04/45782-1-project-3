@@ -1,77 +1,323 @@
+/* Split-screen container */
 .Signup {
     width: 100%;
     height: 100vh;
     display: flex;
+    flex-direction: row;
+    position: relative;
+    overflow: hidden;
+    
+    /* Unified smooth gradient across entire page */
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* LEFT SIDE - Completely seamless, no overlay */
+.Signup::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: transparent;
+    z-index: 0;
+}
+
+/* Welcome message with floating animation */
+.Signup::after {
+    content: '✈️ Join Our Travel Community!\A\AStart Your Adventure Today';
+    white-space: pre-wrap;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #f3f4f6;
+    text-align: center;
+    padding: 40px;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    letter-spacing: -0.5px;
+    line-height: 1.3;
+    z-index: 1;
+    animation: floatWelcome 3s ease-in-out infinite;
 }
 
-.Signup form {
-    width: 100%;
-    max-width: 380px;
+@keyframes floatWelcome {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* RIGHT SIDE - Container for form and go-login */
+.signup-panel {
+    width: 50%;
+    height: 100%;
+    margin-left: auto;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    background: #fff;
-    padding: 28px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    justify-content: center;
+    align-items: center;
+    padding: 40px 5%;
+    position: relative;
+    z-index: 2;
 }
 
-.Signup input {
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: .2s ease;
+/* Form area with glassmorphism */
+.Signup form {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 50px 45px;
+    border-radius: 24px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    position: relative;
+    animation: slideUpForm 0.6s ease-out;
 }
 
-.Signup input:focus {
-    border-color: #3b82f6;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(59,130,246,0.25);
+@keyframes slideUpForm {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.Signup button {
-    margin-top: 8px;
-    padding: 12px;
-    background: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background .2s ease, transform .15s ease;
-}
-
-.Signup button:hover {
-    background: #2563eb;
-    transform: translateY(-1px);
-}
-
+/* Field wrapper */
 .Signup .field {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
+/* Labels */
 .Signup label {
     font-size: 0.95rem;
-    font-weight: 500;
-    color: #374151;
+    font-weight: 700;
+    color: #2d3748;
+    letter-spacing: 0.3px;
 }
 
+/* Inputs - glassy and modern */
+.Signup input {
+    padding: 14px 16px;
+    border: 2px solid rgba(79, 172, 254, 0.3);
+    border-radius: 12px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #2d3748;
+    font-weight: 500;
+}
+
+.Signup input::placeholder {
+    color: #a0aec0;
+    font-weight: 400;
+}
+
+.Signup input:focus {
+    border-color: #4facfe;
+    outline: none;
+    background: #ffffff;
+    box-shadow: 
+        0 0 0 4px rgba(79, 172, 254, 0.15),
+        0 4px 12px rgba(79, 172, 254, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Button - matching header gradient */
+.Signup button {
+    margin-top: 12px;
+    padding: 15px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    cursor: pointer;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.Signup button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.Signup button:hover::before {
+    left: 100%;
+}
+
+.Signup button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.5);
+}
+
+.Signup button:active {
+    transform: translateY(-1px);
+}
+
+/* Login link - premium animated styling matching go-signup exactly */
 .go-login {
+    width: 100%;
+    max-width: 480px;
     text-align: center;
-    margin-top: 14px;
-    font-size: .95rem;
+    margin-top: 25px;
+    font-size: 1.1rem;
+    color: #ffffff;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .go-login a {
-    color: #3b82f6;
-    font-weight: 500;
+    color: #ffffff;
+    font-weight: 900;
     text-decoration: none;
+    padding: 12px 28px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    animation: gentlePulseLogin 3s ease-in-out infinite;
+    font-size: 1.1rem;
+}
+
+/* Subtle pulsing glow effect */
+@keyframes gentlePulseLogin {
+    0%, 100% {
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            0 0 20px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            0 0 30px rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* Animated shine effect on the button */
+.go-login a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+}
+
+.go-login a:hover::before {
+    left: 100%;
+}
+
+/* Elegant arrow that appears on hover */
+.go-login a::after {
+    content: ' →';
+    display: inline-block;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.go-login a:hover::after {
+    opacity: 1;
+    transform: translateX(5px);
+}
+
+.go-login a:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.7);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 
+        0 8px 30px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        0 0 40px rgba(255, 255, 255, 0.6);
+}
+
+.go-login a:active {
+    transform: translateY(-1px) scale(1);
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* RESPONSIVE - Stack vertically on mobile */
+@media (max-width: 968px) {
+    .Signup {
+        flex-direction: column;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .Signup::before {
+        width: 100%;
+        height: 35%;
+        background: transparent;
+    }
+    
+    .Signup::after {
+        width: 100%;
+        height: 35%;
+        font-size: 1.8rem;
+        padding: 20px;
+    }
+    
+    .signup-panel {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 35%;
+        padding: 20px;
+    }
+    
+    .Signup form {
+        max-width: 100%;
+        padding: 35px 30px;
+    }
+    
+    .go-login {
+        max-width: 100%;
+        margin-top: 20px;
+    }
 }

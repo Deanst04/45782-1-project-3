@@ -4,48 +4,178 @@
     justify-content: space-between;
     align-items: center;
 
-    background: #ffffff;
-    padding: 12px 22px;
-    border-bottom: 1px solid #e5e7eb;
-
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    padding: 18px 36px;
+    box-shadow: 0 8px 32px rgba(79, 172, 254, 0.25);
+    
     font-size: 1rem;
     font-weight: 500;
-    color: #111827;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Left side (logo) */
+/* Animated background accent */
+.Header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Left side (logo) with FunFly branding */
 .Header .logo {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 1.75rem;
+    font-weight: 900;
     cursor: pointer;
-    color: #1e3a8a; /* deep blue */
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
 }
 
-/* Right side (welcome + logout) */
+.Header .logo::before {
+    content: '✈️';
+    font-size: 2rem;
+    animation: fly 2s ease-in-out infinite;
+}
+
+@keyframes fly {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(-5deg); }
+}
+
+.Header .logo:hover {
+    transform: scale(1.05);
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Right side (welcome + logout) - Professional version */
 .Header .user-area {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 20px;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.15rem;
+    position: relative;
+    z-index: 1;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    animation: welcomeGlow 3s ease-in-out infinite;
+    transition: all 0.3s ease;
 }
 
-/* Logout button */
+@keyframes welcomeGlow {
+    0%, 100% {
+        text-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.3),
+            0 0 20px rgba(255, 255, 255, 0.3);
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        text-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.3),
+            0 0 30px rgba(255, 255, 255, 0.5),
+            0 0 40px rgba(255, 255, 255, 0.3);
+        box-shadow: 
+            0 6px 25px rgba(255, 255, 255, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+}
+
+.Header .user-area:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.Header .user-area::before {
+    content: '👋';
+    font-size: 1.4rem;
+    margin-right: 4px;
+    display: inline-block;
+    animation: wave 2.5s ease-in-out infinite;
+    transform-origin: 70% 70%;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    10%, 30% { transform: rotate(14deg); }
+    20%, 40% { transform: rotate(-8deg); }
+    50%, 70% { transform: rotate(14deg); }
+    60%, 80% { transform: rotate(-4deg); }
+    90% { transform: rotate(0deg); }
+}
+
+/* Username styling */
+.Header .user-area span {
+    position: relative;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+}
+
+/* Logout button with modern glassmorphism and SAD EMOJI */
 .Header .logout-btn {
-    padding: 6px 12px;
-    background: #ef4444;
+    padding: 10px 24px;
+    background: rgba(255, 255, 255, 0.25);
     color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.Header .logout-btn::before {
+    content: '😢';
+    position: absolute;
+    left: -30px;
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.Header .logout-btn:hover::before {
+    left: 10px;
+    opacity: 1;
 }
 
 .Header .logout-btn:hover {
-    background: #dc2626;
+    background: rgba(255, 255, 255, 0.35);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    padding-left: 40px;
 }
 
-/* Active link */
-.Header .active {
-    color: #2563eb;
-    font-weight: 600;
+.Header .logout-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
