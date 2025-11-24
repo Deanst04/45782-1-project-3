@@ -154,7 +154,7 @@
 }
 
 .Header .logout-btn::before {
-    content: '😢';
+    content: '✈️';
     position: absolute;
     left: -30px;
     font-size: 1.2rem;
