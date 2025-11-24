@@ -4,7 +4,7 @@ import AuthContext from '../auth/AuthContext';
 import { useContext } from 'react';
 import authService from '../../../services/auth';
 import type SignupModel from '../../../models/signup';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 export default function Signup() {
 
@@ -12,12 +12,15 @@ export default function Signup() {
 
     const authContext = useContext(AuthContext)
 
+    const navigate = useNavigate()
+
     async function submit(signup: SignupModel) {
 
         try {
             const { jwt } = await authService.signup(signup)
             authContext?.newJwt(jwt)
             alert('signed in successfully')
+            navigate('/user')
         } catch(e) {
             alert(e)
         }
