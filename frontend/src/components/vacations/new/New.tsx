@@ -1,16 +1,19 @@
 import './New.css'
 import { useForm } from 'react-hook-form';
-// import AdminServices from '../../../services/auth-aware/AdminServices';
-// import useService from '../../../hooks/use-service';
+import AdminServices from '../../../services/auth-aware/AdminServices';
+import useService from '../../../hooks/use-service';
 import type VacationDraft from '../../../models/vacation-draft';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
+import { useAppDispatcher } from '../../../redux/hooks';
+import { addVacation } from '../../../redux/vacation-slice';
 
 export default function New() {
 
     const { register, handleSubmit, reset, formState } = useForm<VacationDraft>();
 
-    // const adminServices = useService(AdminServices)
+    const adminServices = useService(AdminServices)
+    const dispatch = useAppDispatcher()
 
     const navigate = useNavigate()
 
@@ -30,6 +33,8 @@ export default function New() {
         console.log(draft)
 
         try {
+            const vacation = await adminServices.createVacation(draft)
+            dispatch(addVacation(vacation))
             console.log('submitted')
             reset()
             setPreview('')
@@ -102,7 +107,7 @@ export default function New() {
                 </div>
                 <div className="formError">{formState.errors.image?.message}</div>
                 <button className='add-btn'>add vacation</button>
-                <button className='cancel-btn' onClick={() => navigate('/admin')}>cancel</button>
+                <button type='button' className='cancel-btn' onClick={() => navigate('/admin')}>cancel</button>
             </form>
         </div>
     )

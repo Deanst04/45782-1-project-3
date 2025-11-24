@@ -40,6 +40,8 @@ export default function Edit() {
                     return
                 } else {
 
+                    setPreview(foundVacation.imageUrl)
+
                     reset({
                         destination: foundVacation.destination,
                         description: foundVacation.description,
@@ -47,8 +49,6 @@ export default function Edit() {
                         endDate: foundVacation.endDate.split('T')[0],
                         price: foundVacation.price
                     })
-
-                    setPreview(foundVacation.imageUrl)
 
                 }
                     
