@@ -5,20 +5,26 @@ import './Edit.css'
 import type VacationDraft from '../../../models/vacation-draft'
 import { useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
+import { useAppDispatcher, useAppSelector } from '../../../redux/hooks'
+import { editVacation, init } from '../../../redux/vacation-slice'
+import Spinner from '../../common/spinner/Spinner'
 import VacationServices from '../../../services/auth-aware/VacationServices'
-import type Vacation from '../../../models/vacation'
 
 export default function Edit() {
 
-    const adminServices = useService(AdminServices)
-    const vacationServices = useService(VacationServices)
-
     const { id } = useParams<'id'>()
 
-    const [vacationToEdit, setVacationToEdit] = useState<Vacation | undefined>(undefined)
-    const [preview, setPreview] = useState<string>('')
+    const adminServices = useService(AdminServices)
+    const vacationServices = useService(VacationServices)
+    const foundVacation = useAppSelector(state => state.vacationSlice.vacations.find(v => v.id === id))
+    const dispatch = useAppDispatcher()
 
-    const { register, handleSubmit, reset, formState, watch } = useForm<VacationDraft>()
+    const [preview, setPreview] = useState<string>('')
+    // const [isLoading, setIsLoading] = useState<boolean>(true)
+
+    const { register, handleSubmit, reset, formState, watch } = useForm<VacationDraft>({
+        shouldFocusError: false
+    })
 
     const navigate = useNavigate()
 
@@ -28,35 +34,35 @@ export default function Edit() {
 
                 if(!id) return undefined
 
-                const vacations = await vacationServices.getVacations()
-                const foundVacation = vacations.find(v => v.id === id)
-
                 if(!foundVacation) {
-                    alert('Vacation not found')
-                    navigate('/admin')
+                    const vacationsFromServer = await vacationServices.getVacations()
+                    dispatch(init(vacationsFromServer))
                     return
+                } else {
+
+                    reset({
+                        destination: foundVacation.destination,
+                        description: foundVacation.description,
+                        startDate: foundVacation.startDate.split('T')[0],
+                        endDate: foundVacation.endDate.split('T')[0],
+                        price: foundVacation.price
+                    })
+
+                    setPreview(foundVacation.imageUrl)
+
                 }
-
-                setVacationToEdit(foundVacation)
-                setPreview(foundVacation.imageUrl)
-
-                reset({
-                    destination: foundVacation.destination,
-                    description: foundVacation.description,
-                    startDate: foundVacation.startDate.split('T')[0],
-                    endDate: foundVacation.endDate.split('T')[0],
-                    price: foundVacation.price
-                })
-
+                    
             } catch(e) {
                 alert(e)
             }
+
         })()
-    }, [id, reset])
+    }, [id, reset, foundVacation, dispatch])
 
     async function submit(draft: VacationDraft) {
         try {
-            await adminServices.editVacation(id!, draft)
+            const editedVacation = await adminServices.editVacation(id!, draft)
+            dispatch(editVacation(editedVacation))
             navigate('/admin')
         } catch(e) {
             alert(e)
@@ -75,9 +81,9 @@ export default function Edit() {
     return (
         <div className='Edit'>
             
-            {!vacationToEdit && <p>Loading...</p>}
+            {!foundVacation && <Spinner />}
 
-            {vacationToEdit && (
+            {foundVacation && (
                 <form onSubmit={handleSubmit(submit)}>
                 <input placeholder='add destination' {...register('destination', {
                     required: "Destination is required",
@@ -148,11 +154,11 @@ export default function Edit() {
                 </div>
                 <div className="formError">{formState.errors.image?.message}</div>
                 <button className='add-btn'>add vacation</button>
-                <button type='button' className='cancel-btn' onClick={() => navigate('/admin')}>cancel</button>                    
+                <button type='button' className='cancel-btn' onClick={() => navigate('/admin')}>cancel</button>                   
                 </form>
             )}
 
         </div>
     )
-
+    
 }

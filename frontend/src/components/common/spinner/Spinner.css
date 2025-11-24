@@ -1,13 +1,16 @@
 /* Main wrapper */
 .Spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 0;
-    left: 0;
+    background: rgba(255, 255, 255, 0.8); /* אופציונלי */
+    backdrop-filter: blur(2px); /* אופציונלי */
+    z-index: 9999;
 }
 
 /* Position the content (spinner + text) */

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import './AdminPage.css'
-import type Vacation from '../../../models/vacation'
 import useTitle from '../../../hooks/use-title'
 import useService from '../../../hooks/use-service'
 import VacationServices from '../../../services/auth-aware/VacationServices'
@@ -9,6 +8,8 @@ import VacationCard from '../vacation-card/VacationCard'
 import { useNavigate } from 'react-router-dom'
 import Spinner from '../../common/spinner/Spinner'
 import Pagination from '@mui/material/Pagination';
+import { useAppDispatcher, useAppSelector } from '../../../redux/hooks'
+import { deleteVacation, init } from '../../../redux/vacation-slice'
 
 export default function AdminPage() {
 
@@ -16,10 +17,11 @@ export default function AdminPage() {
 
     const vacationServices = useService(VacationServices)
     const adminServices = useService(AdminServices)
+    const vacations = useAppSelector(state => state.vacationSlice.vacations)
+    const dispatch = useAppDispatcher()
 
     const navigate = useNavigate()
 
-    const [vacations, setVacations] = useState<Vacation[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [page, setPage] = useState<number>(1)
     const [animState, setAnimState] = useState<"fade-in" | "fade-out">("fade-in");
@@ -32,15 +34,17 @@ export default function AdminPage() {
     useEffect(() => {
         (async () => {
             try {
-                const vacations = await vacationServices.getVacations()
-                setVacations(vacations)
+                if(vacations.length === 0) {
+                    const vacationsFromServer = await vacationServices.getVacations()
+                    dispatch(init(vacationsFromServer))
+                }
             } catch(e) {
                 alert(e)
             } finally {
                 setIsLoading(false)
             }
         })()
-    }, [])
+    }, [dispatch, vacations.length])
 
     useEffect(() => {
         if(vacations.length > 0) {
@@ -50,12 +54,12 @@ export default function AdminPage() {
                 setPage(totalPages)
             }
         }
-    }, [vacations])
+    }, [vacations.length])
 
     async function removeVacation(id: string) {
         try {
             await adminServices.deleteVacation(id)
-            setVacations(vacations.filter(v => v.id !== id))
+            dispatch(deleteVacation(id))
         } catch(e) {
             alert(e)
         }
@@ -81,6 +85,7 @@ export default function AdminPage() {
                     <VacationCard
                         key={v.id}
                         vacation={v}
+                        role='admin'
                         onDelete={removeVacation}
                         onEdit={editVacation}
                     />

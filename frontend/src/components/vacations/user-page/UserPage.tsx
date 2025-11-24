@@ -1,20 +1,24 @@
 import { useEffect, useState } from 'react'
 import useTitle from '../../../hooks/use-title'
 import './UserPage.css'
-import type Vacation from '../../../models/vacation'
 import useService from '../../../hooks/use-service'
 import VacationServices from '../../../services/auth-aware/VacationServices'
 import VacationCard from '../vacation-card/VacationCard'
 import Spinner from '../../common/spinner/Spinner'
 import Pagination from '@mui/material/Pagination';
+import { useAppDispatcher, useAppSelector } from '../../../redux/hooks'
+import { init, toggleLike } from '../../../redux/vacation-slice'
+import FollowsServices from '../../../services/auth-aware/FollowsServices'
 
 export default function UserPage() {
 
     useTitle('User Page')
 
     const vacationServices = useService(VacationServices)
+    const followService = useService(FollowsServices)
+    const vacations = useAppSelector(state => state.vacationSlice.vacations)
+    const dispatch = useAppDispatcher()
 
-    const [vacations, setVacations] = useState<Vacation[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [page, setPage] = useState<number>(1)
     const [animState, setAnimState] = useState<"fade-in" | "fade-out">("fade-in");
@@ -28,8 +32,10 @@ export default function UserPage() {
         (async () => {
 
             try {
-                const vacations = await vacationServices.getVacations()
-                setVacations(vacations)
+                if(vacations.length === 0) {
+                    const vacationsFromServer = await vacationServices.getVacations()
+                    dispatch(init(vacationsFromServer))
+                }
             } catch(e) {
                 alert(e)
             } finally {
@@ -37,7 +43,7 @@ export default function UserPage() {
             }
 
         })()
-    }, [])
+    }, [vacations.length, dispatch])
 
     useEffect(() => {
         if(vacations.length > 0) {
@@ -47,7 +53,30 @@ export default function UserPage() {
                 setPage(totalPages)
             }
         }
-    }, [vacations])
+    }, [vacations.length])
+
+    async function toggleFollow(id: string) {
+
+        const targetVac = vacations.find(v => v.id === id)
+        if(!targetVac) return
+
+        try {
+            if(targetVac.isFollowed) {
+                console.log(`you just unlike:`, id)
+                await followService.unfollow(id)
+                dispatch(toggleLike(id))
+            } else {
+                console.log(`you just liked:`, id)
+                await followService.follow(id)
+                dispatch(toggleLike(id))
+            }
+            console.log('toggled successfully')
+        } catch(e) {
+            alert(e)
+        }
+    }
+
+    
 
     return (
         <div className='UserPage'>
@@ -59,6 +88,8 @@ export default function UserPage() {
                         <VacationCard
                             key={v.id}
                             vacation={v}
+                            role='user'
+                            onToggleFollow={toggleFollow}
                         />
                     ))}
                 </div>

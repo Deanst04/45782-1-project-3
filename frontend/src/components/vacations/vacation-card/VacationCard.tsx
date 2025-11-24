@@ -1,16 +1,13 @@
 import './VacationCard.css'
 import type VacationModel from '../../../models/vacation'
-// import { useNavigate } from 'react-router-dom'
-import useRole from '../../../hooks/use-role'
 import LikeButton from '../../common/like-button/LikeButton'
-import useService from '../../../hooks/use-service'
-import FollowsServices from '../../../services/auth-aware/FollowsServices'
-import { useState } from 'react'
 
 interface VacationProps {
     vacation: VacationModel,
+    role: "user" | "admin",
     onDelete?: (id: string) => void,
-    onEdit?: (id: string) => void
+    onEdit?: (id: string) => void,
+    onToggleFollow?: (id: string) => void
 }
 
 export default function VacationCard(props: VacationProps) {
@@ -21,38 +18,14 @@ export default function VacationCard(props: VacationProps) {
         endDate,
         destination,
         description,
+        price,
         followerCount,
         isFollowed,
-        price,
-        imageUrl
+        imageUrl,
      } = props.vacation
-
-    const role = useRole()
-
-    const followService = useService(FollowsServices)
-
-    const [followed, setFollowed] = useState<boolean>(isFollowed)
-    const [count, setCount] = useState<number>(followerCount)
     
-    async function handleToggleFollow() {
-
-        try {
-            if(followed) {
-                console.log(`you just unlike:`, id)
-                await followService.unfollow(id)
-                setFollowed(false)
-                setCount(count - 1)
-            } else {
-                console.log(`you just liked:`, id)
-                await followService.follow(id)
-                setFollowed(true)
-                setCount(count + 1)
-            }
-            console.log('toggled successfully')
-        } catch(e) {
-            alert(e)
-        }
-
+    function handleToggleFollow() {
+        props.onToggleFollow?.(id)
     }
 
     function removeMe() {
@@ -68,11 +41,11 @@ export default function VacationCard(props: VacationProps) {
 
             <div className='vac-image'>
                 <img src={imageUrl} alt={destination} />
-                {role === "user" && (
+                {props.role === "user" && (
                     <div className='like-button-container'>
                         <LikeButton
-                            followerCount={count}
-                            isFollowed={followed}
+                            followerCount={followerCount}
+                            isFollowed={isFollowed}
                             onToggle={handleToggleFollow}
                         />
                     </div>
@@ -93,7 +66,7 @@ export default function VacationCard(props: VacationProps) {
                 </div>
                 <div className='vac-actions'>
 
-                    {role === "admin" && (
+                    {props.role === "admin" && (
                         <div className='admin-actions'>
                             <button onClick={editMe}>edit vacation</button>
                             <button onClick={removeMe}>delete vacation</button>
