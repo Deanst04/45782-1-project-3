@@ -41,7 +41,6 @@ export default function UserPage() {
             } finally {
                 setIsLoading(false)
             }
-
         })()
     }, [vacations.length, dispatch])
 
@@ -82,7 +81,7 @@ export default function UserPage() {
         <div className='UserPage'>
             {isLoading && <Spinner /> }
 
-            {!isLoading && <>
+            {!isLoading && vacations.length > 0 && <>
                 <div className={`vacation-grid ${animState}`}>
                     {vacationToShow.map(v => (
                         <VacationCard

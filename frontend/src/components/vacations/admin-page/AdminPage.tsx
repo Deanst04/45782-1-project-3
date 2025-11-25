@@ -12,6 +12,7 @@ import { useAppDispatcher, useAppSelector } from '../../../redux/hooks'
 import { deleteVacation, init } from '../../../redux/vacation-slice'
 
 export default function AdminPage() {
+    
 
     useTitle('Admin Panel')
 
@@ -73,7 +74,7 @@ export default function AdminPage() {
         <div className='AdminPage'>
             {isLoading && <Spinner />}
 
-            {!isLoading && <>
+            {!isLoading && vacations.length > 0 && <>
             <h1>Admin Panel</h1>
             <div className='admin-panel-actions'>
             <button className='add-vac' onClick={() => navigate('/admin/add-vacation')}>add vacation</button>
