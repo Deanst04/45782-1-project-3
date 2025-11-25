@@ -22,9 +22,7 @@ export default function Edit() {
     const [preview, setPreview] = useState<string>('')
     // const [isLoading, setIsLoading] = useState<boolean>(true)
 
-    const { register, handleSubmit, reset, formState, watch } = useForm<VacationDraft>({
-        shouldFocusError: false
-    })
+    const { register, handleSubmit, reset, formState, watch } = useForm<VacationDraft>()
 
     const navigate = useNavigate()
 
