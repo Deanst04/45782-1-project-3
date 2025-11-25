@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useAppDispatcher } from '../../../redux/hooks';
 import { addVacation } from '../../../redux/vacation-slice';
+import useScroll from '../../../hooks/use-scroll';
 
 export default function New() {
 
@@ -14,6 +15,7 @@ export default function New() {
 
     const adminServices = useService(AdminServices)
     const dispatch = useAppDispatcher()
+    const scroll = useScroll()
 
     const navigate = useNavigate()
 
@@ -45,7 +47,7 @@ export default function New() {
     }
 
     return (
-        <div className='New'>
+        <div className='New' ref={scroll}>
             <form onSubmit={handleSubmit(submit)}>
                 <input placeholder='add destination' {...register('destination', {
                     required: "Destination is required",

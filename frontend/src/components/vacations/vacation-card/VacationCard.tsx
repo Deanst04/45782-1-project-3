@@ -38,7 +38,6 @@ export default function VacationCard(props: VacationProps) {
 
     return (
         <div className='VacationCard'>
-
             <div className='vac-image'>
                 <img src={imageUrl} alt={destination} />
                 {props.role === "user" && (

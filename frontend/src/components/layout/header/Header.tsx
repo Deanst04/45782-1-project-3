@@ -3,6 +3,8 @@ import './Header.css'
 import AuthContext from '../../auth/auth/AuthContext'
 import useFirstName from '../../../hooks/use-username'
 import { useNavigate } from 'react-router-dom'
+import { useAppDispatcher } from '../../../redux/hooks'
+import { reset } from '../../../redux/vacation-slice'
 
 export default function Header() {
 
@@ -10,10 +12,13 @@ export default function Header() {
 
     const name = useFirstName()
 
+    const dispatch = useAppDispatcher()
+
     const navigate = useNavigate()
 
     function logout() {
         authContext?.newJwt('')
+        dispatch(reset())
         navigate('/')
     }
 

@@ -39,10 +39,9 @@ export default function AdminPage() {
                     const vacationsFromServer = await vacationServices.getVacations()
                     dispatch(init(vacationsFromServer))
                 }
+                setIsLoading(false)
             } catch(e) {
                 alert(e)
-            } finally {
-                setIsLoading(false)
             }
         })()
     }, [dispatch, vacations.length])

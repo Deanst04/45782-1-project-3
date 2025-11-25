@@ -9,6 +9,7 @@ import { useAppDispatcher, useAppSelector } from '../../../redux/hooks'
 import { editVacation, init } from '../../../redux/vacation-slice'
 import Spinner from '../../common/spinner/Spinner'
 import VacationServices from '../../../services/auth-aware/VacationServices'
+import useScroll from '../../../hooks/use-scroll'
 
 export default function Edit() {
 
@@ -18,9 +19,10 @@ export default function Edit() {
     const vacationServices = useService(VacationServices)
     const foundVacation = useAppSelector(state => state.vacationSlice.vacations.find(v => v.id === id))
     const dispatch = useAppDispatcher()
+    const scroll = useScroll()
 
     const [preview, setPreview] = useState<string>('')
-    // const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const { register, handleSubmit, reset, formState, watch } = useForm<VacationDraft>()
 
@@ -49,9 +51,10 @@ export default function Edit() {
                     })
 
                 }
-                    
             } catch(e) {
                 alert(e)
+            } finally {
+                setIsLoading(false)
             }
 
         })()
@@ -77,11 +80,11 @@ export default function Edit() {
 
 
     return (
-        <div className='Edit'>
+        <div className='Edit' ref={scroll}>
             
-            {!foundVacation && <Spinner />}
+            {isLoading && <Spinner />}
 
-            {foundVacation && (
+            {!isLoading && foundVacation && (
                 <form onSubmit={handleSubmit(submit)}>
                 <input placeholder='add destination' {...register('destination', {
                     required: "Destination is required",

@@ -32,10 +32,13 @@ export const vacationSlice = createSlice({
 
             vac.isFollowed = !vac.isFollowed
             vac.followerCount += vac.isFollowed ? 1 : -1
+        },
+        reset: (state) => {
+            state.vacations = []
         }
     }
 })
 
-export const { init, addVacation, editVacation, deleteVacation, toggleLike } = vacationSlice.actions
+export const { init, addVacation, editVacation, deleteVacation, toggleLike, reset } = vacationSlice.actions
 
 export default vacationSlice.reducer
