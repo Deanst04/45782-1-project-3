@@ -1,0 +1,163 @@
+.Filter {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.40) 0%,
+        rgba(240, 244, 255, 0.35) 100%);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border-radius: 18px;
+    padding: 14px 18px;
+    border: 1.4px solid rgba(255, 255, 255, 0.35);
+    box-shadow:
+        0 4px 18px rgba(31, 38, 135, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    min-width: 190px;
+    transition: all 0.25s ease;
+}
+
+.Filter:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 6px 26px rgba(31, 38, 135, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.Filter:hover {
+    animation: filterHoverPulse 0.25s ease-out;
+}
+
+@keyframes filterHoverPulse {
+    0% { transform: translateY(-2px) scale(0.995); }
+    100% { transform: translateY(-2px) scale(1); }
+}
+
+/* FormControl */
+.Filter .MuiFormControl-root {
+    width: 190px;
+    background: transparent;
+}
+
+/* Input container */
+.Filter .MuiFilledInput-root {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.35) 0%,
+        rgba(240, 244, 255, 0.28) 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    overflow: hidden;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        0 1px 6px rgba(0, 0, 0, 0.06);
+    transition: all 0.25s ease;
+    transform-origin: center;
+}
+
+.Filter .MuiFilledInput-root::before,
+.Filter .MuiFilledInput-root::after {
+    display: none;
+}
+
+.Filter .MuiFilledInput-root:hover {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.45) 0%,
+        rgba(240, 244, 255, 0.38) 100%);
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+.Filter .MuiFilledInput-root.Mui-focused {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.52) 0%,
+        rgba(240, 244, 255, 0.45) 100%);
+    border-color: rgba(14, 165, 233, 0.45);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        0 0 8px rgba(14, 165, 233, 0.25),
+        0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+
+/* Label */
+.Filter .MuiInputLabel-root {
+    color: #4b5563;
+    font-weight: 700;
+    transform: translateY(-4px);
+    font-size: 1rem;            /* Increased label size */
+    opacity: 0.9;               /* Slightly clearer */
+    letter-spacing: 0.3px;      /* Cleaner readability */
+}
+
+.Filter .MuiInputLabel-root.Mui-focused {
+    color: #0ea5e9;
+}
+
+/* Select text */
+.Filter .MuiSelect-select {
+    padding: 12px 14px !important;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Icon */
+.Filter .MuiSelect-icon {
+    color: #6b7280;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.Filter .MuiFilledInput-root.Mui-focused .MuiSelect-icon {
+    color: #0ea5e9;
+    transform: rotate(180deg) scale(1.05);
+}
+
+/* Dropdown Paper */
+.MuiPaper-root.MuiMenu-paper {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.90) 0%,
+        rgba(240, 244, 255, 0.85) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 14px;
+    border: 1.4px solid rgba(255, 255, 255, 0.5);
+    box-shadow:
+        0 10px 36px rgba(31, 38, 135, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transform-origin: top center;
+    animation: paperDrop 0.18s ease-out;
+}
+
+/* Menu items */
+.Filter .MuiMenuItem-root {
+    padding: 10px 16px;
+    margin: 3px 0;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #1f2937;
+    background: transparent !important;
+    transition: background 0.2s ease, color 0.2s ease;
+    animation: menuItemFade 0.18s ease forwards;
+}
+
+.Filter .MuiMenuItem-root:hover {
+    background: rgba(14, 165, 233, 0.18) !important;
+    color: #0c4a6e;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+.Filter .MuiMenuItem-root.Mui-selected {
+    background: rgba(14, 165, 233, 0.25) !important;
+    color: #0c4a6e !important;
+    font-weight: 700;
+}
+
+.Filter .MuiMenuItem-root.Mui-selected:hover {
+    background: rgba(14, 165, 233, 0.32) !important;
+}
+
+@keyframes menuItemFade {
+    0% { opacity: 0; transform: translateY(-4px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes paperDrop {
+    0% { opacity: 0; transform: scale(0.98) translateY(-4px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}

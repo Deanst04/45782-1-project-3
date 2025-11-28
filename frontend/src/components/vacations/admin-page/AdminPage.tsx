@@ -7,9 +7,10 @@ import AdminServices from '../../../services/auth-aware/AdminServices'
 import VacationCard from '../vacation-card/VacationCard'
 import { useNavigate } from 'react-router-dom'
 import Spinner from '../../common/spinner/Spinner'
-import Pagination from '@mui/material/Pagination';
 import { useAppDispatcher, useAppSelector } from '../../../redux/hooks'
 import { deleteVacation, init } from '../../../redux/vacation-slice'
+import usePagination from '../../../hooks/use-pagination'
+import VacationsPagination from '../../common/vacations-pagination/VacationsPagination'
 
 export default function AdminPage() {
     
@@ -21,16 +22,12 @@ export default function AdminPage() {
     const vacations = useAppSelector(state => state.vacationSlice.vacations)
     const dispatch = useAppDispatcher()
 
+    const { page, setPage, vacationToShow, totalPages } = usePagination(vacations, 10)
+
     const navigate = useNavigate()
 
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [page, setPage] = useState<number>(1)
     const [animState, setAnimState] = useState<"fade-in" | "fade-out">("fade-in");
-    const vacPerPage = 10
-
-    const startIndex = (page - 1) * vacPerPage
-    const endIndex = startIndex + vacPerPage
-    const vacationToShow = vacations.slice(startIndex, endIndex)
 
     useEffect(() => {
         (async () => {
@@ -46,15 +43,6 @@ export default function AdminPage() {
         })()
     }, [dispatch, vacations.length])
 
-    useEffect(() => {
-        if(vacations.length > 0) {
-            const totalPages = Math.ceil(vacations.length / vacPerPage)
-
-            if(page > totalPages) {
-                setPage(totalPages)
-            }
-        }
-    }, [vacations.length])
 
     async function removeVacation(id: string) {
         try {
@@ -92,22 +80,12 @@ export default function AdminPage() {
                 ))}
             </div>
 
-            <div className='pagination-wrapper'>
-                <Pagination 
-                    count={Math.ceil(vacations.length / vacPerPage)}
+            <div className='pagination-admin'>
+                <VacationsPagination
                     page={page}
-                    onChange={(_, value) => {
-                        setAnimState("fade-out")
-
-                        setTimeout(() => {
-                            setPage(value);
-                            setAnimState("fade-in");
-                        }, 200);  // 200ms fade-out then update
-                    }}
-                    color="primary"
-                    size="large"
-                    variant="outlined"
-                    shape="rounded"
+                    setPage={setPage}
+                    totalPages={totalPages}
+                    setAnimState={setAnimState}
                 />
             </div>
             </>}

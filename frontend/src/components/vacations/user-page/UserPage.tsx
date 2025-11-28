@@ -5,10 +5,12 @@ import useService from '../../../hooks/use-service'
 import VacationServices from '../../../services/auth-aware/VacationServices'
 import VacationCard from '../vacation-card/VacationCard'
 import Spinner from '../../common/spinner/Spinner'
-import Pagination from '@mui/material/Pagination';
 import { useAppDispatcher, useAppSelector } from '../../../redux/hooks'
 import { init, toggleLike } from '../../../redux/vacation-slice'
 import FollowsServices from '../../../services/auth-aware/FollowsServices'
+import Filter, { type FilterType } from '../../common/filter/Filter'
+import VacationsPagination from '../../common/vacations-pagination/VacationsPagination'
+import usePagination from '../../../hooks/use-pagination'
 
 export default function UserPage() {
 
@@ -20,13 +22,28 @@ export default function UserPage() {
     const dispatch = useAppDispatcher()
 
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [page, setPage] = useState<number>(1)
     const [animState, setAnimState] = useState<"fade-in" | "fade-out">("fade-in");
-    const vacPerPage = 10
 
-    const startIndex = (page - 1) * vacPerPage
-    const endIndex = startIndex + vacPerPage
-    const vacationToShow = vacations.slice(startIndex, endIndex)
+    const [filter, setFilter] = useState<FilterType>("all")
+    const now = new Date()
+
+    const filteredVacations = vacations.filter(v => {
+        const startDate = new Date(v.startDate)
+        const endDate = new Date(v.endDate)
+
+        if(filter === 'all') return true
+
+        if(filter === 'followed') return v.isFollowed === true
+
+        if(filter === 'upcoming') return startDate > now
+
+        if(filter === 'active') return now >= startDate && now <= endDate
+
+        return true
+    })
+
+    const { page, setPage, vacationToShow, totalPages } = usePagination(filteredVacations, 10)
+
 
     useEffect(() => {
         (async () => {
@@ -42,15 +59,7 @@ export default function UserPage() {
         })()
     }, [vacations.length, dispatch])
 
-    useEffect(() => {
-        if(vacations.length > 0) {
-            const totalPages = Math.ceil(vacations.length / vacPerPage)
 
-            if(page > totalPages) {
-                setPage(totalPages)
-            }
-        }
-    }, [vacations.length])
 
     async function toggleFollow(id: string) {
 
@@ -73,6 +82,11 @@ export default function UserPage() {
         }
     }
 
+    function filterVacations(filter: FilterType) {
+        setFilter(filter)
+        setPage(1)
+    }
+
     
 
     return (
@@ -80,6 +94,13 @@ export default function UserPage() {
             {isLoading && <Spinner /> }
 
             {!isLoading && vacations.length > 0 && <>
+            <h1>Vacations</h1>
+            <div className='user-panel-actions'>
+                <Filter 
+                    value={filter}
+                    onChange={filterVacations}
+                />
+            </div>
                 <div className={`vacation-grid ${animState}`}>
                     {vacationToShow.map(v => (
                         <VacationCard
@@ -91,23 +112,13 @@ export default function UserPage() {
                     ))}
                 </div>
 
-                <div className='pagination-wrapper'>
-                        <Pagination 
-                            count={Math.ceil(vacations.length / vacPerPage)}
-                            page={page}
-                            onChange={(_, value) => {
-                            setAnimState("fade-out")
-                
-                            setTimeout(() => {
-                                setPage(value);
-                                setAnimState("fade-in");
-                                }, 200);  // 200ms fade-out then update
-                            }}
-                            color="primary"
-                            size="large"
-                            variant="outlined"
-                            shape="rounded"
-                        />
+                <div className='pagination-user'>
+                    <VacationsPagination
+                        page={page}
+                        setPage={setPage}
+                        totalPages={totalPages}
+                        setAnimState={setAnimState}
+                    />
                 </div>
             </>
             }

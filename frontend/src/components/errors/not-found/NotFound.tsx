@@ -14,8 +14,8 @@ export default function NotFound() {
 
     return (
         <div className='NotFound'>
-            <div className='nf-plane'>✈️ You navigated like a Ryanair pilot</div>
-            <div className='notfound-content'>
+            <div className='nf-up'>✈️ You navigated like a Ryanair pilot</div>
+            <div className='nf-content'>
                 <h1 className='nf-title'>404</h1>
                 <p className='nf-sub'>not found, where is your head?</p>
                 <button onClick={() => navigate(`${target}`)} className='nf-btn'>
