@@ -20,7 +20,9 @@
         "@tailwindcss/vite": "^4.1.17",
         "axios": "^1.11.0",
         "cheerio": "^1.1.2",
+        "i": "^0.3.7",
         "jwt-decode": "^4.0.0",
+        "npm": "^11.6.4",
         "react": "^19.1.1",
         "react-dom": "^19.1.1",
         "react-hook-form": "^7.62.0",
@@ -28,7 +30,7 @@
         "react-redux": "^9.2.0",
         "react-router-dom": "^7.8.2",
         "recharts": "^3.4.1",
-        "socket-enums-deanst": "^1.0.0",
+        "socket-enums-deanst-vacations": "^1.0.1",
         "socket.io-client": "^4.8.1",
         "tailwindcss": "^4.1.17",
         "uuid": "^13.0.0"

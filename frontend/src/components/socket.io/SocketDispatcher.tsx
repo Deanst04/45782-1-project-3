@@ -1,52 +1,43 @@
-// import { useEffect, useState, type PropsWithChildren } from "react";
-// import { io } from "socket.io-client";
-// import type User from "../../models/user";
-// import { useAppDispatcher } from "../../redux/hooks";
-// import useUserId from "../../hooks/use-user-id";
-// import { v4 } from "uuid";
-// import SocketDispatcherContext from "./SocketDispatcherContext";
-// import SocketMessages from "socket-enums-deanst";
+import { useEffect, useState, type PropsWithChildren } from "react";
+import { io } from "socket.io-client";
+import type Vacation from "../../models/vacation";
+import { useAppDispatcher } from "../../redux/hooks";
+import useUserId from "../../hooks/use-user-id";
+import { v4 } from "uuid";
+import SocketDispatcherContext from "./SocketDispatcherContext";
+import SocketMessages from "socket-enums-deanst-vacations"
 
-// export default function SocketDispatcher(props: PropsWithChildren) {
+export default function SocketDispatcher(props: PropsWithChildren) {
 
-//     const dispatch = useAppDispatcher()
-//     const userId = useUserId()
+    const dispatch = useAppDispatcher()
+    const userId = useUserId()
 
-//     const [clientId] = useState<string>(v4())
+    const [clientId] = useState<string>(v4())
 
-//     useEffect(() => {
-//         const socket = io(`${import.meta.env.VITE_IO_SERVER_URL}`)
-//         socket.onAny((eventName: string, payload) => {
+    useEffect(() => {
+        const socket = io(`${import.meta.env.VITE_IO_SERVER_URL}`)
+        socket.onAny((eventName: string, payload) => {
 
-//             console.log('io message', eventName, payload)
+            console.log('io message', eventName, payload)
 
-//             if (payload.from === clientId) return;
-//             switch (eventName) {
-//                 case SocketMessages.NewPost:
-//                     if ((payload.post as Post).user.id === userId) {
-//                         dispatch(newPost(payload.post as Post))
-//                     }
-//                     break;
-//                 case SocketMessages.NewFollow:
-//                     if (userId === (payload.followee as User).id) {
-//                         dispatch(newFollower((payload.follower as User)))
-//                     } else if (userId === (payload.follower as User).id) {
-//                         dispatch(follow(payload.followee as User))
-//                     }
-//                     break;
-//             }
-//         })
+            if (payload.from === clientId) return;
+            // switch (eventName) {
+            //     case SocketMessages.NewVacation:
+            //         if()
+            //         break;
+            // }
+        })
 
-//         return () => { socket.disconnect() }
-//     }, [dispatch, userId])
+        return () => { socket.disconnect() }
+    }, [dispatch, userId])
 
 
 
-//     const { children } = props
+    const { children } = props
 
-//     return (
-//         <SocketDispatcherContext.Provider value={{ clientId }}>
-//             {children}
-//         </SocketDispatcherContext.Provider>
-//     )
-// }
+    return (
+        <SocketDispatcherContext.Provider value={{ clientId }}>
+            {children}
+        </SocketDispatcherContext.Provider>
+    )
+}

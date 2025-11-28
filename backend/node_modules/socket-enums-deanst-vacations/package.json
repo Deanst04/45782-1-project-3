@@ -1,0 +1,18 @@
+{
+  "name": "socket-enums-deanst-vacations",
+  "version": "1.0.1",
+  "description": "",
+  "main": "./dist/socket-enums.js",
+  "types": "./dist/socket-enums.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
