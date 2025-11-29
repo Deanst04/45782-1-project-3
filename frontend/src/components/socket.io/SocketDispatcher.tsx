@@ -6,6 +6,8 @@ import useUserId from "../../hooks/use-user-id";
 import { v4 } from "uuid";
 import SocketDispatcherContext from "./SocketDispatcherContext";
 import SocketMessages from "socket-enums-deanst-vacations"
+import { addVacation, likeVacation, unlikeVacation } from "../../redux/vacation-slice";
+import { decreaseFollowersCount, increaseFollowersCount } from "../../redux/graph-slice";
 
 export default function SocketDispatcher(props: PropsWithChildren) {
 
@@ -21,11 +23,21 @@ export default function SocketDispatcher(props: PropsWithChildren) {
             console.log('io message', eventName, payload)
 
             if (payload.from === clientId) return;
-            // switch (eventName) {
-            //     case SocketMessages.NewVacation:
-            //         if()
-            //         break;
-            // }
+            switch (eventName) {
+                case SocketMessages.NewVacation:
+                    if(payload.vacation as Vacation) {
+                        dispatch(addVacation(payload.vacation as Vacation))
+                    }
+                    break;
+                case SocketMessages.VacationLiked:
+                    dispatch(likeVacation({ vacationId: payload.vacationId, isSelf: payload.userId === userId }))
+                    dispatch(increaseFollowersCount(payload.vacationId))
+                    break;
+                case SocketMessages.VacationUnliked:
+                    dispatch(unlikeVacation({ vacationId: payload.vacationId, isSelf: payload.userId === userId }))
+                    dispatch(decreaseFollowersCount(payload.vacationId))
+                    break;
+            }
         })
 
         return () => { socket.disconnect() }

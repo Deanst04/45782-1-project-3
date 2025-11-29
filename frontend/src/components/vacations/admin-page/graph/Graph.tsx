@@ -1,17 +1,23 @@
 import { useEffect, useState } from 'react';
 import './Graph.css'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
-import type VacationFollowersCount from '../../../../models/vacation-followed-count';
 import useService from '../../../../hooks/use-service';
 import AdminServices from '../../../../services/auth-aware/AdminServices';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../../../common/spinner/Spinner';
+import useTitle from '../../../../hooks/use-title';
+import { useAppDispatcher, useAppSelector } from '../../../../redux/hooks';
+import { init, reset } from '../../../../redux/graph-slice';
 
 export default function Graph() {
 
+    useTitle('Vacations Stats Graph')
+
+    const vacationStats = useAppSelector(state => state.graphSlice.stats)
+    const dispatch = useAppDispatcher()
+
     const adminServices = useService(AdminServices)
 
-    const [vacationStats, setVacationStats] = useState<VacationFollowersCount[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const navigate = useNavigate()
@@ -20,14 +26,14 @@ export default function Graph() {
         (async () => {
             try {
                 const vacationStats = await adminServices.getVacationFollowersCount()
-                setVacationStats(vacationStats)
+                dispatch(init(vacationStats))
             } catch(e) {
                 alert(e)
             } finally {
                 setIsLoading(false)
             }
         })()
-    }, [])
+    }, [dispatch])
 
     function splitDestination(destination: string): { city: string, country: string } {
         const parts = destination.split(',')
@@ -47,7 +53,10 @@ export default function Graph() {
 
             {!isLoading && <>
             <h1>Vacation Followers Statistics</h1>
-            <button className='back-btn' onClick={() => navigate('/admin')}>
+            <button className='back-btn' onClick={() => {
+                    dispatch(reset())
+                    navigate('/admin')
+                }}>
                 Back to admin page
             </button>
             <ResponsiveContainer width='100%' height={400}>

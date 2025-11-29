@@ -1,4 +1,8 @@
 declare enum SocketMessages {
-    NewVacation = "NewVacation"
+    NewVacation = "NewVacation",
+    UpdateVacation = "UpdateVacation",
+    VacationDeleted = "VacationDeleted",
+    VacationLiked = "VacationLiked",
+    VacationUnliked = "VacationUnliked"
 }
 export default SocketMessages;

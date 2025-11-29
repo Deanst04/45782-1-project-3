@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../../models/User";
 import Vacation from "../../models/Vacation";
+import socket from "../../io/io";
+import SocketMessages from "socket-enums-deanst-vacations";
 
 export async function getVacations(req: Request, res: Response, next: NextFunction) {
 
@@ -38,8 +40,13 @@ export async function getVacations(req: Request, res: Response, next: NextFuncti
 export async function createVacation(req: Request, res: Response, next: NextFunction) {
     
     try {
-        const vacation = await Vacation.create({...req.body})
-        res.status(201).json(vacation)
+        const newVacation = await Vacation.create({...req.body})
+        res.status(201).json(newVacation)
+
+        socket.emit(SocketMessages.NewVacation, {
+            from: req.get('x-client-id') || 'server',
+            vacation: newVacation
+        })
     } catch(e) {
         next(e)
     }
@@ -66,6 +73,11 @@ export async function editVacation(req: Request<{ vacationId: string }>, res: Re
         vacation.imageUrl = req.body.imageUrl
         await vacation.save()
         res.json(vacation)
+
+        socket.emit(SocketMessages.UpdateVacation, {
+            from: req.get('x-client-id') || 'server',
+            vacation
+        })
     } catch(e) {
         next(e)
     }
@@ -82,6 +94,11 @@ export async function deleteVacation(req: Request<{ vacationId: string }>, res: 
             message: 'No vacation found to delete.'
         })
         res.json({ success: true })
+
+        socket.emit(SocketMessages.VacationDeleted, {
+            from: req.get('x-client-id') || 'server',
+            vacationId
+        })
     } catch(e) {
         next(e)
     }

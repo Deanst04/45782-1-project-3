@@ -6,7 +6,7 @@ import VacationServices from '../../../services/auth-aware/VacationServices'
 import VacationCard from '../vacation-card/VacationCard'
 import Spinner from '../../common/spinner/Spinner'
 import { useAppDispatcher, useAppSelector } from '../../../redux/hooks'
-import { init, toggleLike } from '../../../redux/vacation-slice'
+import { init, likeVacation, unlikeVacation } from '../../../redux/vacation-slice'
 import FollowsServices from '../../../services/auth-aware/FollowsServices'
 import Filter, { type FilterType } from '../../common/filter/Filter'
 import VacationsPagination from '../../common/vacations-pagination/VacationsPagination'
@@ -70,11 +70,11 @@ export default function UserPage() {
             if(targetVac.isFollowed) {
                 console.log(`you just unlike:`, id)
                 await followService.unfollow(id)
-                dispatch(toggleLike(id))
+                dispatch(unlikeVacation({ vacationId: id, isSelf: true }))
             } else {
                 console.log(`you just liked:`, id)
                 await followService.follow(id)
-                dispatch(toggleLike(id))
+                dispatch(likeVacation({ vacationId: id, isSelf: true }))
             }
             console.log('toggled successfully')
         } catch(e) {

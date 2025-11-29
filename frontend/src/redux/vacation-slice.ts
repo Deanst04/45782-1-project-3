@@ -26,12 +26,22 @@ export const vacationSlice = createSlice({
         deleteVacation: (state, action: PayloadAction<string>) => {
             state.vacations = state.vacations.filter(v => v.id !== action.payload)
         },
-        toggleLike: (state, action: PayloadAction<string>) => {
-            const vac = state.vacations.find(v => v.id === action.payload)
+        likeVacation: (state, action: PayloadAction<{ vacationId: string, isSelf: boolean }>) => {
+            const vac = state.vacations.find(v => v.id === action.payload.vacationId)
             if (!vac) return
 
-            vac.isFollowed = !vac.isFollowed
-            vac.followerCount += vac.isFollowed ? 1 : -1
+            vac.followerCount += 1
+
+            if(action.payload.isSelf === true) vac.isFollowed = true
+        },
+        unlikeVacation: (state, action: PayloadAction<{ vacationId: string, isSelf: boolean }>) => {
+            const vac = state.vacations.find(v => v.id === action.payload.vacationId)
+            if (!vac) return
+
+            vac.followerCount -= 1
+
+            if (action.payload.isSelf === true) vac.isFollowed = false
+            
         },
         reset: (state) => {
             state.vacations = []
@@ -39,6 +49,6 @@ export const vacationSlice = createSlice({
     }
 })
 
-export const { init, addVacation, editVacation, deleteVacation, toggleLike, reset } = vacationSlice.actions
+export const { init, addVacation, editVacation, deleteVacation, likeVacation, unlikeVacation, reset } = vacationSlice.actions
 
 export default vacationSlice.reducer

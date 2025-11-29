@@ -4,15 +4,16 @@ import AuthContext from '../auth/AuthContext';
 import { useContext } from 'react';
 import authService from '../../../services/auth';
 import type SignupModel from '../../../models/signup';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import useTitle from '../../../hooks/use-title';
 
 export default function Signup() {
+
+    useTitle('Signup Page')
 
     const { register, handleSubmit } = useForm<SignupModel>()
 
     const authContext = useContext(AuthContext)
-
-    const navigate = useNavigate()
 
     async function submit(signup: SignupModel) {
 
@@ -20,7 +21,6 @@ export default function Signup() {
             const { jwt } = await authService.signup(signup)
             authContext?.newJwt(jwt)
             alert('signed in successfully')
-            navigate('/user')
         } catch(e) {
             alert(e)
         }

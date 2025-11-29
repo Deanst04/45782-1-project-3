@@ -5,8 +5,11 @@ import './Login.css'
 import { useForm } from 'react-hook-form';
 import AuthContext from '../auth/AuthContext';
 import { NavLink } from 'react-router-dom';
+import useTitle from '../../../hooks/use-title';
 
 export default function Login() {
+
+    useTitle('Login Page')
 
     const { register, handleSubmit } = useForm<LoginModel>();
 
