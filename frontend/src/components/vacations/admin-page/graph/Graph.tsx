@@ -47,18 +47,38 @@ export default function Graph() {
         return {...v, city, country}
     })
 
+    async function handleExportCsv() {
+        try {
+            const blob = await adminServices.generateCsv()
+
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = 'vacations-stats.csv'
+            document.body.appendChild(a)
+            a.click()
+            a.remove()
+            window.URL.revokeObjectURL(url)
+        } catch(e) {
+            alert("CSV download failed: " + e)
+        }
+    }
+
     return (
         <div className='Graph'>
             {isLoading && <Spinner />}
 
             {!isLoading && <>
             <h1>Vacation Followers Statistics</h1>
+            <div className='graph-actions'>
             <button className='back-btn' onClick={() => {
                     dispatch(reset())
                     navigate('/admin')
                 }}>
                 Back to admin page
             </button>
+            <button className='csv-btn' onClick={handleExportCsv}>export csv</button>
+            </div>
             <ResponsiveContainer width='100%' height={400}>
                 <BarChart data={graphData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray='3 3' />

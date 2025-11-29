@@ -25,4 +25,11 @@ export default class AdminServices extends AuthAware {
         return response.data
     }
 
+    async generateCsv(): Promise<Blob> {
+        const response = await this.axiosInstance.get(`/vacations/export-csv`, {
+            responseType: 'blob'
+        })
+        return response.data
+    }
+
 }

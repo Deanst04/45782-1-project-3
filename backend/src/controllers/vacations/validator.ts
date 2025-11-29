@@ -14,6 +14,19 @@ export const editVacationValidator = createVacationValidator.keys({
     imageUrl: Joi.string().optional()
 })
 
+export const newVacationImageValidation = Joi.object({
+    image: Joi.object({
+        mimetype: Joi.string().valid(
+            'image/jpeg',
+            'image/png',
+            'image/webp',
+            'image/jpg'
+        )
+    }).unknown(true).optional()
+})
+
+export const editVacationImageValidation = newVacationImageValidation
+
 export const idByParamsValidator = (paramName: string) => Joi.object({
     [paramName]: Joi.string().uuid().required()
 })

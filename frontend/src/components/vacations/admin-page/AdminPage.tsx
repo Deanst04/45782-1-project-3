@@ -66,7 +66,6 @@ export default function AdminPage() {
             <div className='admin-panel-actions'>
             <button className='add-vac' onClick={() => navigate('/admin/add-vacation')}>add vacation</button>
             <button className='graph-btn' onClick={() => navigate('/admin/graph')}>view graph</button>
-            <button className='csv-btn'>export csv</button>
             </div>
             <div className={`vacation-grid ${animState}`}>
                 {vacationToShow.map(v => (

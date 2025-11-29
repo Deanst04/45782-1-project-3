@@ -15,7 +15,7 @@ services:
     # image: deanst/weezer-db:1.0.0
     build: ./database
     volumes:
-      - weezerdata:/var/lib/mysql
+      - funflydata:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
       interval: 1m30s
@@ -49,9 +49,12 @@ services:
       - 4566:4566
       - 4510-4559:4510-4559
     image: localstack/localstack
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+      - PERSISTENCE=1
     volumes:
-      - s3localdata:/var/lib/localstack
-      - funflydata:/var/lib/mysql
+      - funfly_s3localdata:/var/lib/localstack
   io:
     container_name: funfly-io-compose
     ports:
@@ -60,4 +63,4 @@ services:
 
 volumes:
   funflydata:
-  s3localdata:
+  funfly_s3localdata:

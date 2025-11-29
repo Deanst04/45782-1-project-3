@@ -3,6 +3,8 @@ import User from "../../models/User";
 import Vacation from "../../models/Vacation";
 import socket from "../../io/io";
 import SocketMessages from "socket-enums-deanst-vacations";
+import { json2csv } from "json-2-csv";
+import getStats from "../../common/vacation-stats";
 
 export async function getVacations(req: Request, res: Response, next: NextFunction) {
 
@@ -40,7 +42,10 @@ export async function getVacations(req: Request, res: Response, next: NextFuncti
 export async function createVacation(req: Request, res: Response, next: NextFunction) {
     
     try {
-        const newVacation = await Vacation.create({...req.body})
+        const newVacation = await Vacation.create({
+            ...req.body,
+            imageUrl: req.imageUrl
+        })
         res.status(201).json(newVacation)
 
         socket.emit(SocketMessages.NewVacation, {
@@ -70,7 +75,9 @@ export async function editVacation(req: Request<{ vacationId: string }>, res: Re
         vacation.startDate = req.body.startDate
         vacation.endDate = req.body.endDate
         vacation.price = req.body.price
-        vacation.imageUrl = req.body.imageUrl
+        
+        if(req.imageUrl) vacation.imageUrl = req.imageUrl
+
         await vacation.save()
         res.json(vacation)
 
@@ -109,23 +116,31 @@ export async function getVacationsFollowersCount(req: Request, res: Response, ne
 
     try {
         
-        const vacations = await Vacation.findAll({
-            include: {
-                model: User,
-                as: 'followers'
-            }
-        })
-
-        const results = vacations.map(v => ({
-            id: v.id,
-            destination: v.destination,
-            followersCount: v.followers?.length || 0
-        }))
-
+        const results = await getStats()
         res.json(results)
 
     } catch(e) {
         next(e)
+    }
+
+}
+
+export async function generateCsv(req: Request, res: Response, next: NextFunction) {
+
+    try {
+
+        const results = await getStats()
+        const csv = await json2csv(results)
+
+        res.header('Content-Type', 'text/csv')
+        res.attachment('vacation-stats.csv')
+        res.send(csv)
+
+    } catch(e) {
+        next({
+            message: 'Error converting JSON to CSV',
+            details: e
+        })
     }
 
 }
