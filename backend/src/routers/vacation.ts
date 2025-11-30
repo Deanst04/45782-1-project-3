@@ -9,7 +9,7 @@ const router = Router()
 
 router.get('/', getVacations)
 router.post('/', enforceAdmin, validation(createVacationValidator, "body"), validation(newVacationImageValidation, 'files'), fileUploader, createVacation)
-router.patch('/:vacationId', enforceAdmin, validation(idByParamsValidator("vacationId"), "params"), fileUploader,validation(editVacationValidator, "body"), editVacation)
+router.patch('/:vacationId', enforceAdmin, validation(idByParamsValidator("vacationId"), "params"), validation(editVacationValidator, "body"), fileUploader, editVacation)
 router.delete('/:vacationId', enforceAdmin, validation(idByParamsValidator("vacationId"), "params"), deleteVacation)
 router.get('/followers-count', enforceAdmin, getVacationsFollowersCount)
 router.get('/export-csv', enforceAdmin, generateCsv)
