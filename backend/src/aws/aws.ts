@@ -1,4 +1,4 @@
-import { CreateBucketCommand, S3Client } from '@aws-sdk/client-s3'
+import { CreateBucketCommand, S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
 import { readdirSync, readFileSync } from 'fs';
 import config from 'config'
@@ -44,12 +44,23 @@ export async function testUpload() {
 
 export async function seedInitialImagesIfNeeded() {
     const bucket = config.get<string>('s3.bucket');
-    const images = join(__dirname, '../images');
+
+    // check if bucket already has seed images
+    const existing = await s3Client.send(new ListObjectsV2Command({
+        Bucket: bucket,
+        Prefix: "seed/"
+    }));
+
+    if (existing.Contents && existing.Contents.length > 0) {
+        console.log("Seed images already exist in bucket, skipping seeding.");
+        return;
+    }
+    const images = join(process.cwd(), 'images');
 
     const files = readdirSync(images);
 
     const tasks = files.map(async (file) => {
-        const body = readFileSync(join(images, file));
+    const body = readFileSync(join(images, file));
 
     try {
         await new Upload({

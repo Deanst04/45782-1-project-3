@@ -26,19 +26,24 @@ export default async function fileUploader(req: Request, res: Response, next: Ne
 
         const { mimetype, data, name } = req.files.image as UploadedFile
 
+        const filename = `${randomUUID()}${extname(name)}`; // e.g. 1234.png
+        const key = `seed/${filename}`; 
+
         const upload = new Upload({
             client: s3Client,
             params: {
                 Bucket: config.get<string>('s3.bucket'),
-                Key: `${randomUUID()}${extname(name)}`,
+                Key: key,
                 ContentType: mimetype,
                 Body: data
             }
         })
 
-        const result = await upload.done()
-        const url = new URL(result.Location)
-        req.imageUrl = url.pathname
+        await upload.done()
+
+        req.imageUrl = filename;
+        // const url = new URL(result.Location)
+        // req.imageUrl = url.pathname
         next()
 
     } catch(e) {

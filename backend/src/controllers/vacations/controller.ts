@@ -44,7 +44,7 @@ export async function createVacation(req: Request, res: Response, next: NextFunc
     try {
         const newVacation = await Vacation.create({
             ...req.body,
-            imageUrl: req.imageUrl
+            imageName: req.imageUrl
         })
         await newVacation.reload()
         res.status(201).json(newVacation)
@@ -73,11 +73,15 @@ export async function editVacation(req: Request<{ vacationId: string }>, res: Re
 
         const data = { ...req.body }
 
-        if (req.body.image) {
-            data.image = req.body.image
+        if (req.imageUrl) {
+            data.imageName = req.imageUrl;
+        } else {
+            data.imageName = vacation.imageName;
         }
 
         await vacation.update(data)
+        await vacation.reload()
+        console.log("UPDATED VACATION:", vacation);
         res.json(vacation)
 
         socket.emit(SocketMessages.UpdateVacation, {

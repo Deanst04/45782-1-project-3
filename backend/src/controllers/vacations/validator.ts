@@ -15,6 +15,7 @@ export const editVacationValidator = createVacationValidator
 .keys({
     startDate: Joi.date().iso().min('1900-01-01')
 })
+.min(1)
 
 export const newVacationImageValidation = Joi.object({
     image: Joi.object({

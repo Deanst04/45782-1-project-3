@@ -29,7 +29,7 @@ export default function VacationCard(props: VacationProps) {
 
     const imageUrl = imageName
         ? `${S3_URL}/${BUCKET}/seed/${imageName}`
-        : null;
+        : "/placeholder.png";
     
     function handleToggleFollow() {
         props.onToggleFollow?.(id)

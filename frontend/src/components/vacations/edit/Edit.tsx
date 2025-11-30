@@ -11,6 +11,7 @@ import Spinner from '../../common/spinner/Spinner'
 import VacationServices from '../../../services/auth-aware/VacationServices'
 import useScroll from '../../../hooks/use-scroll'
 
+
 export default function Edit() {
 
     const { id } = useParams<'id'>()
@@ -32,20 +33,23 @@ export default function Edit() {
         (async () => {
             try {
 
-                if(!id) return undefined
+                    if(!id) return undefined
 
-                if(!foundVacation) {
-                    const vacationsFromServer = await vacationServices.getVacations()
-                    dispatch(init(vacationsFromServer))
-                    return
-                } else {
+                    if(!foundVacation) {
+                        const vacationsFromServer = await vacationServices.getVacations()
+                        dispatch(init(vacationsFromServer))
+                        return
+                    } else {
 
                     const { imageName } = foundVacation;
 
-                    setPreview(foundVacation.imageName)
-
                     if (imageName) {
-                        setPreview(`${import.meta.env.VITE_S3_URL}/images.funfly.com/seed/${imageName}`);
+                        const S3_URL = import.meta.env.VITE_S3_URL;
+                        const BUCKET = "images.funfly.com";
+
+                        setPreview(`${S3_URL}/${BUCKET}/seed/${imageName}`);
+                    } else {
+                        setPreview('');
                     }
 
                     reset({
