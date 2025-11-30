@@ -8,12 +8,14 @@ export default function getImageUrl(imageName: string): string {
         window.location.origin.includes("3012") ||
         window.location.hostname === "localhost";
 
-    const base = s3Url;
+    const base = isCompose ? "http://localhost:4566" : s3Url;
     const bucket = s3Bucket;
 
-    if (isCompose) {
-        return `${base}/${bucket}/${imageName}`;
-    }
+    // Fix path for seeded images in compose:
+    const key =
+        isCompose && !imageName.includes("/")
+            ? `seed/${imageName}`
+            : imageName;
 
-    return `${base}/${bucket}/${imageName}`;
+    return `${base}/${bucket}/${key}`;
 }
