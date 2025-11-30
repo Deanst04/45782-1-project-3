@@ -1,6 +1,7 @@
 import './VacationCard.css'
 import type VacationModel from '../../../models/vacation'
 import LikeButton from '../../common/like-button/LikeButton'
+import getImageUrl from '../../../utils/s3'
 
 interface VacationProps {
     vacation: VacationModel,
@@ -24,12 +25,12 @@ export default function VacationCard(props: VacationProps) {
         imageName,
      } = props.vacation
 
-    const S3_URL = import.meta.env.VITE_S3_URL;
-    const BUCKET = "images.funfly.com";
-
     const imageUrl = imageName
-        ? `${S3_URL}/${BUCKET}/seed/${imageName}`
-        : "/placeholder.png";
+        ? (imageName.includes('/') 
+            ? getImageUrl(imageName) 
+            : getImageUrl(`seed/${imageName}`)
+        )
+        : '/placeholder.png';
     
     function handleToggleFollow() {
         props.onToggleFollow?.(id)

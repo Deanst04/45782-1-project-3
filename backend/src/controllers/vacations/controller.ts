@@ -5,6 +5,7 @@ import socket from "../../io/io";
 import SocketMessages from "socket-enums-deanst-vacations";
 import { json2csv } from "json-2-csv";
 import getStats from "../../common/vacation-stats";
+import { deleteImage } from "../../aws/aws";
 
 export async function getVacations(req: Request, res: Response, next: NextFunction) {
 
@@ -42,17 +43,28 @@ export async function getVacations(req: Request, res: Response, next: NextFuncti
 export async function createVacation(req: Request, res: Response, next: NextFunction) {
     
     try {
+
+        if(!req.imageKey) {
+            return next({
+                status: 400,
+                message: "Image is required"
+            });
+        }
+
         const newVacation = await Vacation.create({
             ...req.body,
-            imageName: req.imageUrl
+            imageName: req.imageKey
         })
+
         await newVacation.reload()
-        res.status(201).json(newVacation)
 
         socket.emit(SocketMessages.NewVacation, {
             from: req.get('x-client-id') || 'server',
             vacation: newVacation
         })
+
+        res.status(201).json(newVacation)
+
     } catch(e) {
         next(e)
     }
@@ -71,12 +83,29 @@ export async function editVacation(req: Request<{ vacationId: string }>, res: Re
             });
         }
 
-        const data = { ...req.body }
+        const data = req.body
 
-        if (req.imageUrl) {
-            data.imageName = req.imageUrl;
+        const oldImage = vacation.imageName
+        const newImage = req.imageKey
+
+        if(newImage) {
+
+            if(oldImage && oldImage.startsWith('vacations/')) {
+
+                try {
+                    await deleteImage(oldImage)
+                } catch(e) {
+                    console.log("Failed to delete previous image:", e)
+                }
+
+            }
+
+            data.imageName = newImage
+
         } else {
-            data.imageName = vacation.imageName;
+
+            data.imageName = oldImage
+
         }
 
         await vacation.update(data)
@@ -98,17 +127,40 @@ export async function deleteVacation(req: Request<{ vacationId: string }>, res: 
 
     try {
         const { vacationId } = req.params
-        const deletedRows = await Vacation.destroy({ where: { id: vacationId } })
-        if (deletedRows === 0) return next({
-            status: 404,
-            message: 'No vacation found to delete.'
-        })
-        res.json({ success: true })
+
+        const vacation = await Vacation.findByPk(vacationId)
+
+        if (!vacation) {
+            return next({
+                status: 404,
+                message: "Vacation not found."
+            });
+        }
+
+        const imageName = vacation.imageName
+
+        if (imageName && imageName.startsWith('vacations/')) {
+
+            try {
+                await deleteImage(imageName)
+            } catch(e) {
+                console.log("Failed to delete image from S3:", e);
+            }
+        }
+
+        await Vacation.destroy({ where: { id: vacationId } })
+        // if (deletedRows === 0) return next({
+        //     status: 404,
+        //     message: 'No vacation found to delete.'
+        // })
 
         socket.emit(SocketMessages.VacationDeleted, {
             from: req.get('x-client-id') || 'server',
             vacationId
         })
+
+        res.json({ success: true })
+
     } catch(e) {
         next(e)
     }
