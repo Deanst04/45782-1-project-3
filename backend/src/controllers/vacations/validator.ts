@@ -5,13 +5,15 @@ export const createVacationValidator = Joi.object({
     description: Joi.string().min(10).max(300).required(),
     startDate: Joi.date().iso().min('now').required(),
     endDate: Joi.date().iso().greater(Joi.ref('startDate')).required(),
-    price: Joi.number().integer().min(1).max(10000).required(),
-    imageUrl: Joi.string().required()
+    price: Joi.number().integer().min(1).max(10000).required()
 })
 
-export const editVacationValidator = createVacationValidator.keys({
-    startDate: Joi.date().iso().min('1900-01-01').required(),
-    imageUrl: Joi.string().optional()
+const makeOptional = schema => schema.optional()
+
+export const editVacationValidator = createVacationValidator
+.fork(['destination', 'description', 'startDate', 'endDate', 'price'], makeOptional)
+.keys({
+    startDate: Joi.date().iso().min('1900-01-01')
 })
 
 export const newVacationImageValidation = Joi.object({
@@ -22,10 +24,12 @@ export const newVacationImageValidation = Joi.object({
             'image/webp',
             'image/jpg'
         )
-    }).unknown(true).optional()
+    }).unknown(true).required()
 })
 
-export const editVacationImageValidation = newVacationImageValidation
+export const editVacationImageValidation = newVacationImageValidation.fork(
+    ['image'], makeOptional
+)
 
 export const idByParamsValidator = (paramName: string) => Joi.object({
     [paramName]: Joi.string().uuid().required()

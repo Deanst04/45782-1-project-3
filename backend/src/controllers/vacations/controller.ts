@@ -46,6 +46,7 @@ export async function createVacation(req: Request, res: Response, next: NextFunc
             ...req.body,
             imageUrl: req.imageUrl
         })
+        await newVacation.reload()
         res.status(201).json(newVacation)
 
         socket.emit(SocketMessages.NewVacation, {
@@ -70,15 +71,13 @@ export async function editVacation(req: Request<{ vacationId: string }>, res: Re
             });
         }
 
-        vacation.destination = req.body.destination
-        vacation.description = req.body.description
-        vacation.startDate = req.body.startDate
-        vacation.endDate = req.body.endDate
-        vacation.price = req.body.price
-        
-        if(req.imageUrl) vacation.imageUrl = req.imageUrl
+        const data = { ...req.body }
 
-        await vacation.save()
+        if (req.body.image) {
+            data.image = req.body.image
+        }
+
+        await vacation.update(data)
         res.json(vacation)
 
         socket.emit(SocketMessages.UpdateVacation, {

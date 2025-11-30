@@ -8,7 +8,7 @@ import followRouter from './routers/follow'
 import config from 'config'
 import sequelize from './db/sequelize';
 import cors from 'cors'
-import { createAppBucketIfNotExists, testUpload } from './aws/aws';
+import { createAppBucketIfNotExists, seedInitialImagesIfNeeded, testUpload } from './aws/aws';
 import fileUpload from 'express-fileupload';
 import enforceAuth from './middlewares/enforce-auth';
 
@@ -41,13 +41,21 @@ app.use(notFound)
 app.use(logger)
 app.use(responder)
 
-// synchronize database schema (not data) changes to the database
-// i.e syncs our TypeScript models folder into the actual SQL schema
-sequelize.sync({ force: process.argv[2] === 'sync' ? true : false })
+async function onStartingServer() {
 
-createAppBucketIfNotExists()
-// testUpload()
+    // synchronize database schema (not data) changes to the database
+    // i.e syncs our TypeScript models folder into the actual SQL schema
+    await sequelize.sync({ force: process.argv[2] === 'sync' ? true : false })
 
-console.log(process.argv[2])
+    await createAppBucketIfNotExists()
+    await testUpload()
+    await seedInitialImagesIfNeeded()
 
-app.listen(port, () => console.log(`${appName} started on port ${port}`))
+    console.log(process.argv[2])
+
+    app.listen(port, () => console.log(`${appName} started on port ${port}`))
+
+}
+
+
+onStartingServer()

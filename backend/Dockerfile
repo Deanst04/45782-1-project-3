@@ -16,6 +16,10 @@ COPY ./ ./
 # build typescript into javascript
 RUN npm run build
 
+# copy images to dist
+RUN mkdir -p dist/images
+COPY ./src/images ./dist/images
+
 # lets get rid of the src folder
 RUN rm -rf ./src
 

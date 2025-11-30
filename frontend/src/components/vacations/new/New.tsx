@@ -31,11 +31,12 @@ export default function New() {
 
     async function submit(draft: VacationDraft) {
 
-        draft.image = (draft.image as unknown as FileList)[0]
-        console.log(draft)
+        const image = (draft.image as unknown as FileList)[0]
+        const payload = {...draft, image}
+        console.log(payload)
 
         try {
-            const vacation = await adminServices.createVacation(draft)
+            const vacation = await adminServices.createVacation(payload)
             dispatch(addVacation(vacation))
             console.log('submitted')
             reset()

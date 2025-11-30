@@ -11,7 +11,11 @@ export default class AdminServices extends AuthAware {
     }
 
     async createVacation(vacation: VacationDraft): Promise<Vacation> {
-        const response = await this.axiosInstance.post<Vacation>('/vacations', vacation)
+        const response = await this.axiosInstance.post<Vacation>('/vacations', vacation, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
         return response.data
     }
 
@@ -21,7 +25,11 @@ export default class AdminServices extends AuthAware {
     }
 
     async editVacation(vacationId: string, vacation: VacationDraft): Promise<Vacation> {
-        const response = await this.axiosInstance.patch<Vacation>(`/vacations/${vacationId}`, vacation)
+        const response = await this.axiosInstance.patch<Vacation>(`/vacations/${vacationId}`, vacation, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
         return response.data
     }
 

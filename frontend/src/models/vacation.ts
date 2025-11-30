@@ -4,7 +4,7 @@ export default interface Vacation extends VacationDraft {
     id: string,
     createdAt: string,
     updatedAt: string,
-    imageUrl: string,
+    imageName: string,
     followerCount: number,
     isFollowed: boolean
 }

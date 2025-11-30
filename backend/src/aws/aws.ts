@@ -1,6 +1,8 @@
 import { CreateBucketCommand, S3Client } from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
+import { readdirSync, readFileSync } from 'fs';
 import config from 'config'
+import { extname, join } from 'path';
 
 const s3Connection = JSON.parse(JSON.stringify(config.get<object>('s3.connection')))
 
@@ -38,4 +40,33 @@ export async function testUpload() {
     } catch(e) {
         console.log('exception in test upload: ', e)
     }
+}
+
+export async function seedInitialImagesIfNeeded() {
+    const bucket = config.get<string>('s3.bucket');
+    const images = join(__dirname, '../images');
+
+    const files = readdirSync(images);
+
+    const tasks = files.map(async (file) => {
+        const body = readFileSync(join(images, file));
+
+    try {
+        await new Upload({
+            client: s3Client,
+            params: {
+                Bucket: bucket,
+                Key: `seed/${file}`,
+                Body: body,
+                ContentType: `image/${extname(file).replace('.', '')}`,
+        },
+    }).done();
+
+            console.log(`Seeded ${file}`);
+        } catch (e) {
+            console.log(`Skipping ${file}`, e || '');
+        }
+    });
+
+    await Promise.allSettled(tasks);
 }

@@ -21,8 +21,15 @@ export default function VacationCard(props: VacationProps) {
         price,
         followerCount,
         isFollowed,
-        imageUrl,
+        imageName,
      } = props.vacation
+
+    const S3_URL = import.meta.env.VITE_S3_URL;
+    const BUCKET = "images.funfly.com";
+
+    const imageUrl = imageName
+        ? `${S3_URL}/${BUCKET}/seed/${imageName}`
+        : null;
     
     function handleToggleFollow() {
         props.onToggleFollow?.(id)
@@ -39,7 +46,7 @@ export default function VacationCard(props: VacationProps) {
     return (
         <div className='VacationCard'>
             <div className='vac-image'>
-                <img src={imageUrl} alt={destination} />
+                {imageUrl && <img src={imageUrl} alt={destination} />}
                 {props.role === "user" && (
                     <div className='like-button-container'>
                         <LikeButton

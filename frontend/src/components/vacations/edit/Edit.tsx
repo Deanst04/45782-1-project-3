@@ -40,14 +40,21 @@ export default function Edit() {
                     return
                 } else {
 
-                    setPreview(foundVacation.imageUrl)
+                    const { imageName } = foundVacation;
+
+                    setPreview(foundVacation.imageName)
+
+                    if (imageName) {
+                        setPreview(`${import.meta.env.VITE_S3_URL}/images.funfly.com/seed/${imageName}`);
+                    }
 
                     reset({
                         destination: foundVacation.destination,
                         description: foundVacation.description,
                         startDate: foundVacation.startDate.split('T')[0],
                         endDate: foundVacation.endDate.split('T')[0],
-                        price: foundVacation.price
+                        price: foundVacation.price,
+                        image: undefined
                     })
 
                 }
@@ -61,8 +68,13 @@ export default function Edit() {
     }, [id, reset, foundVacation, dispatch])
 
     async function submit(draft: VacationDraft) {
+        
+        const image = (draft.image as unknown as FileList)[0]
+        const payload = {...draft, image}
+        console.log(payload)
+        
         try {
-            const editedVacation = await adminServices.editVacation(id!, draft)
+            const editedVacation = await adminServices.editVacation(id!, payload)
             dispatch(editVacation(editedVacation))
             navigate('/admin')
         } catch(e) {
