@@ -96,14 +96,37 @@ export default function New() {
                 <div className="formError">{formState.errors.description?.message}</div>
 
                 <label>start date</label>
-                <input type="date" {...register('startDate', {
-                    required: "Start date is required"
+                <input type="date" {...register("startDate", {
+                    required: "Start date is required",
+                    validate: (value) => {
+                        const picked = new Date(value);
+                        const tomorrow = new Date();
+                        tomorrow.setDate(tomorrow.getDate() + 1);
+                        picked.setHours(0,0,0,0);
+                        tomorrow.setHours(0,0,0,0);
+                        return picked >= tomorrow || "Start date must be at least tomorrow";
+                    }
                 })} />
                 <div className="formError">{formState.errors.startDate?.message}</div>
 
                 <label>end date</label>
-                <input type="date" {...register('endDate', {
-                    required: "End date is required"
+                <input type="date" {...register("endDate", {
+                    required: "End date is required",
+                    validate: (value) => {
+                        const start = new Date((document.querySelector("input[name='startDate']") as HTMLInputElement)?.value);
+                        const end = new Date(value);
+
+                        if (isNaN(start.getTime())) return "Please pick start date first";
+
+                        const minEnd = new Date(start);
+                        minEnd.setDate(minEnd.getDate() + 1);
+
+                        start.setHours(0,0,0,0);
+                        end.setHours(0,0,0,0);
+                        minEnd.setHours(0,0,0,0);
+
+                        return end >= minEnd || "End date must be at least 1 day after start date";
+                    }
                 })} />
                 <div className="formError">{formState.errors.endDate?.message}</div>
 

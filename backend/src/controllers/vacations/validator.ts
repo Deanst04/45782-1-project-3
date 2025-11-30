@@ -1,9 +1,11 @@
 import Joi from "joi";
 
+const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
 export const createVacationValidator = Joi.object({
     destination: Joi.string().min(2).max(40).required(),
     description: Joi.string().min(10).max(300).required(),
-    startDate: Joi.date().iso().min('now').required(),
+    startDate: Joi.date().iso().min(tomorrow).required(),
     endDate: Joi.date().iso().greater(Joi.ref('startDate')).required(),
     price: Joi.number().integer().min(1).max(10000).required()
 })
@@ -15,8 +17,8 @@ function makeAllOptional(schema: Joi.ObjectSchema) {
 export const editVacationValidator = makeAllOptional(createVacationValidator)
     .keys({
         // allow editing vacations with past start dates
-        startDate: Joi.date().iso().min('2000-01-01').optional(),
-        endDate: Joi.date().iso().min(Joi.ref('startDate')).optional()
+        startDate: Joi.date().iso().min(tomorrow).optional(),
+        endDate: Joi.date().iso().greater(Joi.ref('startDate')).optional()
     })
     .min(1);
 

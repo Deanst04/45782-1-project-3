@@ -32,20 +32,21 @@ export default function Edit() {
     const { register, handleSubmit, reset, setValue, formState } =
         useForm<VacationDraft>();
 
-    // ============================================================
+
     // INIT
-    // ============================================================
     useEffect(() => {
         (async () => {
             try {
                 if (!id) return;
 
+                // First step → if Redux is empty, fetch vacations ONCE
                 if (!foundVacation) {
                     const vacations = await vacationServices.getVacations();
                     dispatch(init(vacations));
-                    return;
+                    return; // wait for rerender with the real vacation
                 }
 
+                // Now Redux has the vacation → populate form
                 setPreview(
                     foundVacation.imageName
                         ? getImageUrl(foundVacation.imageName)
@@ -63,18 +64,17 @@ export default function Edit() {
 
                 setValue("image", undefined);
 
+                setIsLoading(false);
+
             } catch (e) {
                 alert(e);
-            } finally {
                 setIsLoading(false);
             }
         })();
-    }, [id, foundVacation, dispatch, reset, vacationServices, setValue]);
+    }, [id, foundVacation, dispatch]);
 
 
-    // ============================================================
     // IMAGE CHANGE
-    // ============================================================
     function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -92,28 +92,26 @@ export default function Edit() {
 
         const dt = new DataTransfer();
         dt.items.add(file);
-        setValue("image", dt.files, { shouldValidate: true });
+        setValue("image", dt.files, { shouldValidate: true, shouldDirty: true });
 
         setPreview(URL.createObjectURL(file));
     }
 
-    // ============================================================
-    // NORMALIZE → ALWAYS RETURN A FULL VacationDraft
-    // ============================================================
+
+    // BUILD FINAL DRAFT
     function buildFinalDraft(draft: VacationDraft): VacationDraft {
         return {
             destination: draft.destination || foundVacation!.destination,
             description: draft.description || foundVacation!.description,
             startDate: draft.startDate || foundVacation!.startDate.split("T")[0],
             endDate: draft.endDate || foundVacation!.endDate.split("T")[0],
-            price: draft.price !== undefined ? draft.price : foundVacation!.price,
+            price: draft.price || foundVacation!.price,
             image: draft.image && draft.image.length > 0 ? draft.image : undefined
         };
     }
 
-    // ============================================================
+
     // SUBMIT
-    // ============================================================
     async function submit(draft: VacationDraft) {
         try {
             const finalDraft = buildFinalDraft(draft);
@@ -128,82 +126,114 @@ export default function Edit() {
         }
     }
 
-    // ============================================================
+
     // RENDER
-    // ============================================================
+    if (isLoading) return <Spinner />;
+
+    if (!foundVacation) return <div>Loading vacation...</div>;
+
     return (
         <div className='Edit' ref={scroll}>
-            {isLoading && <Spinner />}
+            <form onSubmit={handleSubmit(submit)}>
 
-            {!isLoading && foundVacation && (
-                <form onSubmit={handleSubmit(submit)}>
+                <input
+                    placeholder='add destination'
+                    {...register('destination')}
+                />
+                <div className="formError">{formState.errors.destination?.message}</div>
 
-                    <input
-                        placeholder='add destination'
-                        {...register('destination')}
-                    />
-                    <div className="formError">{formState.errors.destination?.message}</div>
+                <textarea
+                    placeholder='add description'
+                    {...register('description')}
+                />
+                <div className="formError">{formState.errors.description?.message}</div>
 
-                    <textarea
-                        placeholder='add description'
-                        {...register('description')}
-                    />
-                    <div className="formError">{formState.errors.description?.message}</div>
+                <label>start date</label>
+                <input
+                    type="date"
+                    {...register("startDate", {
+                        validate: (value) => {
+                            if (!value) return true;
+                            const tomorrow = new Date();
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+                            const selected = new Date(value);
+                            return selected >= tomorrow || "Start date must be at least tomorrow";
+                        }
+                    })}
+                />
+                <div className="formError">{formState.errors.startDate?.message}</div>
 
-                    <label>start date</label>
-                    <input
-                        type="date"
-                        {...register('startDate')}
-                    />
-                    <div className="formError">{formState.errors.startDate?.message}</div>
+                <label>end date</label>
+                <input
+                    type="date"
+                    {...register("endDate", {
+                        validate: (value) => {
+                            if (!value) return true;
 
-                    <label>end date</label>
-                    <input
-                        type="date"
-                        {...register('endDate')}
-                    />
-                    <div className="formError">{formState.errors.endDate?.message}</div>
+                            const startInput = document.querySelector("input[name='startDate']") as HTMLInputElement;
+                            const startVal = startInput?.value;
+                            if (!startVal) return true;
 
-                    <input
-                        type="number"
-                        placeholder='price'
-                        {...register('price')}
-                    />
-                    <div className="formError">{formState.errors.price?.message}</div>
+                            const start = new Date(startVal);
+                            if (String(start) === "Invalid Date") return true;
 
-                    <label>cover image</label>
+                            const minEnd = new Date(start);
+                            minEnd.setDate(minEnd.getDate() + 1);
 
-                    <div className='image-upload'>
-                        {!preview && (
-                            <label className='upload-box'>
-                                <span>select cover image</span>
-                                <input
-                                    type='file'
-                                    accept='image/*'
-                                    onChange={handleImageChange}
-                                    hidden
-                                />
-                            </label>
-                        )}
+                            const end = new Date(value);
+                            return end >= minEnd || "End date must be at least 1 day after start date";
+                        }
+                    })}
+                />
+                <div className="formError">{formState.errors.endDate?.message}</div>
 
-                        {preview && (
-                            <label className='upload-preview'>
-                                <img src={preview} alt="preview" />
-                                <input
-                                    type='file'
-                                    accept='image/*'
-                                    onChange={handleImageChange}
-                                    hidden
-                                />
-                            </label>
-                        )}
-                    </div>
+                <input
+                    type="number"
+                    placeholder='price'
+                    {...register('price')}
+                />
+                <div className="formError">{formState.errors.price?.message}</div>
 
-                    <button className='add-btn'>save changes</button>
-                    <button type='button' className='cancel-btn' onClick={() => navigate('/admin')}>cancel</button>
+                <label>cover image</label>
 
-                </form>
-            )}
+                <div className='image-upload'>
+                    {!preview && (
+                        <label className='upload-box'>
+                            <span>select cover image</span>
+                            <input
+                                type='file'
+                                accept='image/*'
+                                {...register("image")}
+                                onChange={handleImageChange}
+                                hidden
+                            />
+                        </label>
+                    )}
+
+                    {preview && (
+                        <label className='upload-preview'>
+                            <img src={preview} alt="preview" />
+                            <input
+                                type='file'
+                                accept='image/*'
+                                {...register("image")}
+                                onChange={handleImageChange}
+                                hidden
+                            />
+                        </label>
+                    )}
+                </div>
+
+                <button className='add-btn'>save changes</button>
+                <button
+                    type='button'
+                    className='cancel-btn'
+                    onClick={() => navigate('/admin')}
+                >
+                    cancel
+                </button>
+
+            </form>
         </div>
     );
 }
